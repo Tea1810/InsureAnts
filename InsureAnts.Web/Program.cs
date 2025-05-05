@@ -1,7 +1,7 @@
-using InsureAnts.Web;
 using InsureAnts.Application;
 using InsureAnts.Infrastructure;
 using Microsoft.AspNetCore.DataProtection;
+using InsureAnts.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
