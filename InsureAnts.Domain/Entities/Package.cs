@@ -13,5 +13,6 @@ public class Package : Entity<int>
     public int DurationInDays { get; set; }
 
     public List<Insurance>? Insurances { get; set; }
-    public List<Client>? Clients { get; set; }
+
+    public List<ClientPackage>? ClientPackages { get; set; }
 }

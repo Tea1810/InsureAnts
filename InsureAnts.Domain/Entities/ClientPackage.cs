@@ -11,6 +11,9 @@ public class ClientPackage : IEntity<(int, int)>
     public DateTime StartDate { get; set; }
 
     public Deal? Deal { get; set; }
+    public Client? Client { get; set; }
+    public Package? Package { get; set; }
+
     (int, int) IEntity<(int, int)>.Id => (ClientId, PackageId);
 }
 
