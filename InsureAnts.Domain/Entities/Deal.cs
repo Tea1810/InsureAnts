@@ -11,5 +11,5 @@ public class Deal : Entity<int>
     public double DiscountPercentage { get; set; }
 
     public List<ClientPackage>? ClientPackages { get; set; }
-    public List<Client>? Clients { get; set; }
+    public List<Client>? Clients{ get; set; }
 }

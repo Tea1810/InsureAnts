@@ -21,4 +21,8 @@
     <ProjectReference Include="..\InsureAnts.Domain\InsureAnts.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\SqlServerMigrations\" />
+  </ItemGroup>
+
 </Project>

@@ -17,8 +17,8 @@ public class Client : Entity<int>
     public AvailabilityStatus Status { get; set; }
     public int NumberOfDeals { get; set; }
 
-    public List<Deal>? Deals { get; set; }
+    public List<Deal>? Deals{ get; set; }
     public List<Insurance>? Insurances { get; set; }
-    public List<Package>? Packages { get; set; }
+    public List<ClientPackage>? ClientPackages { get; set; }
     public List<SupportTicket>? Tickets { get; set; }
 }

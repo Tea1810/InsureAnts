@@ -24,7 +24,7 @@ internal class InsureAntsDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Client).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(InsureAntsDbContext).Assembly);
 
         modelBuilder.HasAnnotation("Relational:HistoryTableName", "__efMigrationsHistory_SqlServer");
     }
