@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InsureAnts.Common\InsureAnts.Common.csproj" />
     <ProjectReference Include="..\InsureAnts.Domain\InsureAnts.Domain.csproj" />
   </ItemGroup>
 

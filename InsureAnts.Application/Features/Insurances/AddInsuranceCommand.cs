@@ -20,8 +20,6 @@ public class AddInsuranceCommand : ICommand<IResponse<Insurance>>
     public int InsuranceTypeId { get; set; }
 
     public InsuranceType? InsuranceType { get; set; }
-    public List<Package>? Packages { get; set; }
-    public List<Client>? Clients { get; set; }
 }
 
 [UsedImplicitly]
@@ -34,7 +32,7 @@ internal class AddInsuranceCommandValidator : AbstractValidator<Insurance>
     }
 }
 
-internal class AddInsuranceCommandHandler : ICommandHandler<AddInsuranceCommand, IResponse<Domain.Entities.Insurance>>
+internal class AddInsuranceCommandHandler : ICommandHandler<AddInsuranceCommand, IResponse<Insurance>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -45,14 +43,14 @@ internal class AddInsuranceCommandHandler : ICommandHandler<AddInsuranceCommand,
         _mapper = mapper;
     }
 
-    public async ValueTask<IResponse<Domain.Entities.Insurance>> Handle(AddInsuranceCommand command, CancellationToken cancellationToken)
+    public async ValueTask<IResponse<Insurance>> Handle(AddInsuranceCommand command, CancellationToken cancellationToken)
     {
-        var entity = _mapper.Map<Domain.Entities.Insurance>(command);
+        var entity = _mapper.Map<Insurance>(command);
 
         _unitOfWork.Insurances.Add(entity);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Response.Success(Texts.Created<Domain.Entities.Insurance>($"for feed {command.Id}")).For(entity);
+        return Response.Success(Texts.Created<Insurance>(entity.Name)).For(entity);
     }
 }

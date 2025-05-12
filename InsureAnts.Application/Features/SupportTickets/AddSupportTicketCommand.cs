@@ -14,9 +14,7 @@ public class AddSupportTicketCommand : ICommand<IResponse<SupportTicket>>
     public TicketType TicketType { get; set; }
     public DateTime? AppointmentDate { get; set; }
     public TicketStatus Status { get; set; }
-    public int ClientId { get; set; }
-
-    public Domain.Entities.Client? Client { get; set; }
+    public Client? Client { get; set; }
 }
 
 [UsedImplicitly]
@@ -49,6 +47,6 @@ internal class AddSupportTicketCommandHandler : ICommandHandler<AddSupportTicket
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Response.Success(Texts.Created<SupportTicket>($"for feed {entity.Id}")).For(entity);
+        return Response.Success(Texts.Created<SupportTicket>($"from client {command.Client!.FirstName}")).For(entity);
     }
 }

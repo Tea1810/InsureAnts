@@ -8,7 +8,7 @@ namespace InsureAnts.Application.Features.InsuranceTypes
 {
     public class EditInsuranceTypeCommand : EditCommand<InsuranceType, InsuranceType, int>
     {
-        public bool WasSeen { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     [UsedImplicitly]

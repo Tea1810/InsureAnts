@@ -13,9 +13,6 @@ public class AddDealCommand : ICommand<IResponse<Deal>>
     public required string Description { get; set; }
     public int DurationInDays { get; set; }
     public double DiscountPercentage { get; set; }
-
-    public List<ClientPackage>? ClientPackages { get; set; }
-    public List<Client>? Clients { get; set; }
 }
 
 [UsedImplicitly]
@@ -47,6 +44,6 @@ internal class AddDealCommandHandler : ICommandHandler<AddDealCommand, IResponse
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Response.Success(Texts.Created<Client>($"for feed {entity.Id}")).For(entity);
+        return Response.Success(Texts.Created<Client>(entity.Name)).For(entity);
     }
 }

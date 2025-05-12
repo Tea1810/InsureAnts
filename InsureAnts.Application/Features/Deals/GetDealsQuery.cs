@@ -1,42 +1,37 @@
 ﻿using InsureAnts.Application.Data_Queries;
 using InsureAnts.Application.DataAccess.Interfaces;
+using InsureAnts.Application.Features.Abstractions;
+using InsureAnts.Common;
 using InsureAnts.Domain.Entities;
-using InsureAnts.Domain.Enums;
 
 namespace InsureAnts.Application.Features.Deals;
 
-public class GetClientsQuery : AbstractQueryRequest<Client>
+public class GetDealsQuery : AbstractQueryRequest<Deal>
 {
     public string SearchTerm { get; set; } = string.Empty;
 
-    public AvailabilityStatus Status { get; set; }
-
-    public Gender Gender { get; set; }
-
-    public override IQueryable<Client> ApplyFilter(IQueryable<Client> source)
+    public override IQueryable<Deal> ApplyFilter(IQueryable<Deal> source)
     {
         if (!string.IsNullOrEmpty(SearchTerm))
         {
-            source = source.Where(c => c.FirstName.Contains(SearchTerm) || c.LastName.Contains(SearchTerm));
+            source = source.Where(c => c.Name.Contains(SearchTerm) || c.Description.Contains(SearchTerm));
         }
-
-        source = source.Where(c => c.Status == Status);
 
         return base.ApplyFilter(source);
     }
 }
 
-internal class GetFeedAlertsQueryHandler : IQueryHandler<GetClientsQuery, QueryResult<Client>>
+internal class GetDealsQueryHandler : IQueryHandler<GetDealsQuery, QueryResult<Deal>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetFeedAlertsQueryHandler(IUnitOfWork unitOfWork)
+    public GetDealsQueryHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public ValueTask<QueryResult<Client>> Handle(GetClientsQuery query, CancellationToken cancellationToken)
+    public ValueTask<QueryResult<Deal>> Handle(GetDealsQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Clients.All().GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.Deals.All().GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }

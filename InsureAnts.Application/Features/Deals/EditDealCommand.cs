@@ -8,7 +8,10 @@ namespace InsureAnts.Application.Features.Deals;
 
 public class EditDealCommand : EditCommand<Deal, Deal, int>
 {
-    public bool WasSeen { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public int DurationInDays { get; set; }
+    public double DiscountPercentage { get; set; }
 }
 
 [UsedImplicitly]

@@ -2,13 +2,16 @@
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Domain.Entities;
+using InsureAnts.Domain.Enums;
 using JetBrains.Annotations;
 
 namespace InsureAnts.Application.Features.Insurances;
 
 public class EditInsuranceCommand : EditCommand<Insurance, Insurance, int>
 {
-    public bool WasSeen { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public AvailabilityStatus Status { get; set; }
 }
 
 [UsedImplicitly]

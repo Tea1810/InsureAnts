@@ -1,22 +1,23 @@
 ﻿using InsureAnts.Application.Data_Queries;
 using InsureAnts.Application.DataAccess.Interfaces;
+using InsureAnts.Application.Features.Abstractions;
+using InsureAnts.Common;
 using InsureAnts.Domain.Entities;
 using InsureAnts.Domain.Enums;
 
 namespace InsureAnts.Application.Features.SupportTickets;
 
-public class GetSupportTicketsQuery : AbstractQueryRequest<Client>
+public class GetSupportTicketsQuery : AbstractQueryRequest<SupportTicket>
 {
     public string SearchTerm { get; set; } = string.Empty;
     public TicketType TicketType { get; set; }
-    public DateTime? AppointmentDate { get; set; }
     public TicketStatus Status { get; set; }
 
     public override IQueryable<SupportTicket> ApplyFilter(IQueryable<SupportTicket> source)
     {
         if (!string.IsNullOrEmpty(SearchTerm))
         {
-            source = source.Where(c => c.FirstName.Contains(SearchTerm) || c.LastName.Contains(SearchTerm));
+            source = source.Where(c => c.Client!.FirstName.Contains(SearchTerm) || c.Client.LastName.Contains(SearchTerm));
         }
 
         source = source.Where(c => c.Status == Status);
@@ -25,17 +26,17 @@ public class GetSupportTicketsQuery : AbstractQueryRequest<Client>
     }
 }
 
-internal class GetFeedAlertsQueryHandler : IQueryHandler<GetSupportTicketsQuery, QueryResult<Client>>
+internal class GetSupportTicketsQueryHandler : IQueryHandler<GetSupportTicketsQuery, QueryResult<SupportTicket>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetFeedAlertsQueryHandler(IUnitOfWork unitOfWork)
+    public GetSupportTicketsQueryHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public ValueTask<QueryResult<Client>> Handle(GetSupportTicketsQuery query, CancellationToken cancellationToken)
+    public ValueTask<QueryResult<SupportTicket>> Handle(GetSupportTicketsQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Clients.All().GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.SupportTickets.All().GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }

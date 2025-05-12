@@ -5,44 +5,41 @@ using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Domain.Entities;
 using JetBrains.Annotations;
 
-namespace InsureAnts.Application.Features.InsuranceTypes
+namespace InsureAnts.Application.Features.InsuranceTypes;
+
+public class AddInsuranceTypeCommand : ICommand<IResponse<InsuranceType>>
 {
-    public class AddInsuranceTypeCommand : ICommand<IResponse<InsuranceType>>
+    public required string Name { get; set; }
+}
+
+[UsedImplicitly]
+internal class AddInsuranceTypeCommandValidator : AbstractValidator<InsuranceType>
+{
+    public AddInsuranceTypeCommandValidator()
     {
-        public required string Name { get; set; }
-        public required int Id { get; set; }
-        public List<Insurance>? Insurances { get; set; }
+        RuleFor(command => command.Name).MaximumLength(50);
+    }
+}
+
+internal class AddInsuranceTypeCommandHandler : ICommandHandler<AddInsuranceTypeCommand, IResponse<InsuranceType>>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public AddInsuranceTypeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
-    [UsedImplicitly]
-    internal class AddInsuranceTypeCommandValidator : AbstractValidator<InsuranceType>
+    public async ValueTask<IResponse<InsuranceType>> Handle(AddInsuranceTypeCommand command, CancellationToken cancellationToken)
     {
-        public AddInsuranceTypeCommandValidator()
-        {
-            RuleFor(command => command.Name).MaximumLength(50);
-        }
-    }
+        var entity = _mapper.Map<InsuranceType>(command);
 
-    internal class AddInsuranceTypeCommandHandler : ICommandHandler<AddInsuranceTypeCommand, IResponse<Domain.Entities.InsuranceType>>
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        _unitOfWork.InsuranceTypes.Add(entity);
 
-        public AddInsuranceTypeCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        public async ValueTask<IResponse<Domain.Entities.InsuranceType>> Handle(AddInsuranceTypeCommand command, CancellationToken cancellationToken)
-        {
-            var entity = _mapper.Map<Domain.Entities.InsuranceType>(command);
-
-            _unitOfWork.InsuranceTypes.Add(entity);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Response.Success(Texts.Created<Domain.Entities.InsuranceType>($"for feed {command.Id}")).For(entity);
-        }
+        return Response.Success(Texts.Created<InsuranceType>(command.Name)).For(entity);
     }
 }

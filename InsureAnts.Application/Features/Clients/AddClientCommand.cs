@@ -8,9 +8,8 @@ using JetBrains.Annotations;
 
 namespace InsureAnts.Application.Features.Clients;
 
-public class AddDealCommand : ICommand<IResponse<Client>>
+public class AddClientCommand : ICommand<IResponse<Client>>
 {
-    public required int Id { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string Email { get; set; }
@@ -39,7 +38,7 @@ internal class AddClientCommandValidator : AbstractValidator<Client>
     }
 }
 
-internal class AddClientCommandHandler : ICommandHandler<AddDealCommand, IResponse<Client>>
+internal class AddClientCommandHandler : ICommandHandler<AddClientCommand, IResponse<Client>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -50,7 +49,7 @@ internal class AddClientCommandHandler : ICommandHandler<AddDealCommand, IRespon
         _mapper = mapper;
     }
 
-    public async ValueTask<IResponse<Client>> Handle(AddDealCommand command, CancellationToken cancellationToken)
+    public async ValueTask<IResponse<Client>> Handle(AddClientCommand command, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<Client>(command);
 
@@ -58,6 +57,6 @@ internal class AddClientCommandHandler : ICommandHandler<AddDealCommand, IRespon
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Response.Success(Texts.Created<Client>($"for feed {command.Id}")).For(entity);
+        return Response.Success(Texts.Created<Client>($"client with the name {entity.FirstName} {entity.LastName}")).For(entity);
     }
 }
