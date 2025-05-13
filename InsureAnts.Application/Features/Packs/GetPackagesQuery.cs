@@ -5,24 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using InsureAnts.Application.Data_Queries;
 using InsureAnts.Application.DataAccess.Interfaces;
+using InsureAnts.Application.Features.Abstractions;
+using InsureAnts.Common;
 using InsureAnts.Domain.Entities;
 using InsureAnts.Domain.Enums;
 
 namespace InsureAnts.Application.Features.Packages;
 
-public class GetClientsQuery : AbstractQueryRequest<Client>
+public class GetPackagesQuery : AbstractQueryRequest<Package>
 {
     public string SearchTerm { get; set; } = string.Empty;
-
+    public required string Name { get; set; }
     public AvailabilityStatus Status { get; set; }
 
-    public Gender Gender { get; set; }
-
-    public override IQueryable<Client> ApplyFilter(IQueryable<Client> source)
+    public override IQueryable<Package> ApplyFilter(IQueryable<Package> source)
     {
         if (!string.IsNullOrEmpty(SearchTerm))
         {
-            source = source.Where(c => c.FirstName.Contains(SearchTerm) || c.LastName.Contains(SearchTerm));
+            source = source.Where(c => c.Name.Contains(SearchTerm));
         }
 
         source = source.Where(c => c.Status == Status);
@@ -31,18 +31,18 @@ public class GetClientsQuery : AbstractQueryRequest<Client>
     }
 }
 
-internal class GetFeedAlertsQueryHandler : IQueryHandler<GetClientsQuery, QueryResult<Client>>
+internal class GetPackagesQueryHandler : IQueryHandler<GetPackagesQuery, QueryResult<Package>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetFeedAlertsQueryHandler(IUnitOfWork unitOfWork)
+    public GetPackagesQueryHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public ValueTask<QueryResult<Client>> Handle(GetClientsQuery query, CancellationToken cancellationToken)
+    public ValueTask<QueryResult<Package>> Handle(GetPackagesQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Clients.All().GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.Packages.All().GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }
 
