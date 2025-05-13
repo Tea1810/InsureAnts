@@ -9,7 +9,7 @@ namespace InsureAnts.Application.Features.InsuranceTypes;
 
 public class AddInsuranceTypeCommand : ICommand<IResponse<InsuranceType>>
 {
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
 
 [UsedImplicitly]
