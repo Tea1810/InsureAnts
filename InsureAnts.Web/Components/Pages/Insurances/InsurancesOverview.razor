@@ -8,7 +8,7 @@
 <MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
 	<ToolBarContent>
 		<div class="d-flex gap-4 w-100 justify-space-between align-end">
-			<MudText Typo="Typo.h6">Insurance Types</MudText>
+			<MudText Typo="Typo.h6">Insurances</MudText>
 			<MudTextField @bind-Value="QueryRequest.SearchTerm"
 						  T="string"
 						  OnKeyUp="ReloadTableOnEnter"
@@ -51,14 +51,12 @@
 			</MudTableSortLabel>
 		</MudTh>
 		<MudTh>
-			<MudTableSortLabel T="Insurance">
+			<MudTableSortLabel T="Insurance" SortLabel="InsuranceType.Name" InitialDirection="SortDirection.Ascending">
 				Type
 			</MudTableSortLabel>
 		</MudTh>
 		<MudTh>
-			<MudTableSortLabel T="Insurance">
 				Description
-			</MudTableSortLabel>
 		</MudTh>
 		<MudTh>
 			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.CreatedAt)" InitialDirection="SortDirection.Ascending">
@@ -84,7 +82,7 @@
 			<MudText>@context.DurationInDays</MudText>
 		</MudTd>
 		<MudTd>
-			<MudText>@context.InsuranceType?.Name</MudText>
+			<MudText>@context.InsuranceType!.Name</MudText>
 		</MudTd>
 		<MudTd>
 			<MudText>@context.Description</MudText>

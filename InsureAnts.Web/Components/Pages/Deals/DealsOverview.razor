@@ -1,6 +1,85 @@
 ﻿@page "/dealsOverview"
+@using InsureAnts.Application.Features.Abstractions
+@using InsureAnts.Application.Features.Deals
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Shared
+@inherits AppEditableTableComponent<GetDealsQuery, Deal>
+<MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
+	<ToolBarContent>
+		<div class="d-flex gap-4 w-100 justify-space-between align-end">
+			<MudText Typo="Typo.h6">Deals</MudText>
+			<MudTextField @bind-Value="QueryRequest.SearchTerm"
+						  T="string"
+						  OnKeyUp="ReloadTableOnEnter"
+						  Placeholder="Search"
+						  Clearable="true"
+						  Adornment="Adornment.Start"
+						  AdornmentIcon="@Icons.Material.Filled.Search"
+						  IconSize="Size.Medium"
+						  Class="mt-0"
+						  autocomplete="off"
+						  id="filter" />
 
-<h1>Deals</h1>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
+		</div>
+	</ToolBarContent>
+	<HeaderContent>
+		<MudTh>
+			<MudTableSortLabel T="Deal" SortLabel="@nameof(Deal.Name)" InitialDirection="SortDirection.Ascending">
+				Name
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Deal" SortLabel="@nameof(Deal.DiscountPercentage)" InitialDirection="SortDirection.Ascending">
+				Discount 
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Deal" SortLabel="@nameof(Deal.DurationInDays)" InitialDirection="SortDirection.Ascending">
+				Duration
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Deal" SortLabel="@nameof(Deal.Description)" InitialDirection="SortDirection.Ascending">
+				Description
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh></MudTh>
+
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd>
+			<MudText>@context.Name</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.DiscountPercentage</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.DurationInDays</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Description</MudText>
+		</MudTd>
+		<MudTd Class="d-flex justify-end">
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" />
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
+		</MudTd>
+	</RowTemplate>
+	<NoRecordsContent>
+		<MudText>There are no items to show in this view.</MudText>
+	</NoRecordsContent>
+	<LoadingContent>
+		<MudText>Loading...</MudText>
+	</LoadingContent>
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+</MudTable>
+
 @code {
-
+	protected override async Task<IResponse> OnDeleteAsync(Deal model)
+	{
+		var response = await Mediator.Send(new DeleteDealCommand { Id = model.Id });
+		return response;
+	}
 }
