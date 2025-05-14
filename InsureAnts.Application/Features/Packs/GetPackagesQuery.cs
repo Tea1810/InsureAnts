@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InsureAnts.Application.Data_Queries;
+﻿using InsureAnts.Application.Data_Queries;
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Common;
