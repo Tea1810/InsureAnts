@@ -30,7 +30,7 @@ internal class GetInsurancesQueryHandler : IQueryHandler<GetInsurancesQuery, Que
 
     public ValueTask<QueryResult<Insurance>> Handle(GetInsurancesQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Insurances.All().GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.Insurances.All().Include(i => i.InsuranceType).GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }
 

@@ -46,6 +46,8 @@ internal class AddInsuranceCommandHandler : ICommandHandler<AddInsuranceCommand,
     {
         var entity = _mapper.Map<Insurance>(command);
 
+        _unitOfWork.InsuranceTypes.Track(entity.InsuranceType!);
+
         _unitOfWork.Insurances.Add(entity);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
