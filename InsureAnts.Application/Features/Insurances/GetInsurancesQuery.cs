@@ -12,8 +12,11 @@ public class GetInsurancesQuery : AbstractQueryRequest<Insurance>
     public string SearchTerm { get; set; } = string.Empty;
 
     public AvailabilityStatus Status { get; set; }
-
-    public Gender Gender { get; set; }
+    public string Name { get; set; }
+    public double Premium { get; set; }
+    public double Coverage { get; set; }
+    public int DurationInDays { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
 
 internal class GetInsurancesQueryHandler : IQueryHandler<GetInsurancesQuery, QueryResult<Insurance>>

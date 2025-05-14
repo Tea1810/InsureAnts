@@ -1,7 +1,117 @@
 ﻿@page "/insurancesOverview"
 
-<h3>InsuranceOverview</h3>
+@using InsureAnts.Application.Features.Abstractions
+@using InsureAnts.Application.Features.Insurances
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Shared
+@inherits AppEditableTableComponent<GetInsurancesQuery, Insurance>
+<MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
+	<ToolBarContent>
+		<div class="d-flex gap-4 w-100 justify-space-between align-end">
+			<MudText Typo="Typo.h6">Insurance Types</MudText>
+			<MudTextField @bind-Value="QueryRequest.SearchTerm"
+						  T="string"
+						  OnKeyUp="ReloadTableOnEnter"
+						  Placeholder="Search"
+						  Clearable="true"
+						  Adornment="Adornment.Start"
+						  AdornmentIcon="@Icons.Material.Filled.Search"
+						  IconSize="Size.Medium"
+						  Class="mt-0"
+						  autocomplete="off"
+						  id="filter" />
+
+			<MudButton  Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
+		</div>
+	</ToolBarContent>
+	<HeaderContent>
+		<MudTh>
+			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.Name)" InitialDirection="SortDirection.Ascending">
+				Name
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.Premium)" InitialDirection="SortDirection.Ascending">
+				Premium
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.Coverage)" InitialDirection="SortDirection.Ascending">
+				Coverage
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.Status)" InitialDirection="SortDirection.Ascending">
+				Status
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.DurationInDays)" InitialDirection="SortDirection.Ascending">
+				Duration
+			</MudTableSortLabel> 
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Insurance">
+				Type
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Insurance">
+				Description
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.CreatedAt)" InitialDirection="SortDirection.Ascending">
+				Creation date
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd>
+			<MudText>@context.Name</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Premium</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Coverage</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Status</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.DurationInDays</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.InsuranceType?.Name</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Description</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.CreatedAt</MudText>
+		</MudTd>
+		<MudTd Class="d-flex justify-end">
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit"/>
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
+		</MudTd>
+	</RowTemplate>
+	<NoRecordsContent>
+		<MudText>There are no items to show in this view.</MudText>
+	</NoRecordsContent>
+	<LoadingContent>
+		<MudText>Loading...</MudText>
+	</LoadingContent>
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+</MudTable>
 
 @code {
-
+	protected override async Task<IResponse> OnDeleteAsync(Insurance model)
+	{
+		var response = await Mediator.Send(new DeleteInsuranceCommand { Id = model.Id });
+		return response;
+	}
 }
