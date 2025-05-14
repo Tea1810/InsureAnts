@@ -12,7 +12,7 @@ public class GetInsurancesQuery : AbstractQueryRequest<Insurance>
     public string SearchTerm { get; set; } = string.Empty;
 
     public AvailabilityStatus Status { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public double Premium { get; set; }
     public double Coverage { get; set; }
     public int DurationInDays { get; set; }

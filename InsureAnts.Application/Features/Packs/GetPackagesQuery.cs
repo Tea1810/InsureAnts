@@ -15,7 +15,7 @@ namespace InsureAnts.Application.Features.Packages;
 public class GetPackagesQuery : AbstractQueryRequest<Package>
 {
     public string SearchTerm { get; set; } = string.Empty;
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public AvailabilityStatus Status { get; set; }
 
     public override IQueryable<Package> ApplyFilter(IQueryable<Package> source)
