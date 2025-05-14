@@ -1,4 +1,5 @@
 ﻿@page "/insuranceTypesOverview"
+@using InsureAnts.Application.Features.Abstractions
 @using InsureAnts.Application.Features.InsuranceTypes
 @using InsureAnts.Domain.Entities
 @using InsureAnts.Web.Components.Shared
@@ -30,6 +31,7 @@
 				Name
 			</MudTableSortLabel>
 		</MudTh>
+		<MudTh></MudTh>
 	</HeaderContent>
 	<RowTemplate>
 		<MudTd>
@@ -37,6 +39,7 @@
 		</MudTd>
 
 		<MudTd Class="d-flex justify-end">
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" />
 			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
 		</MudTd>
 	</RowTemplate>
@@ -52,5 +55,9 @@
 </MudTable>
 
 @code {
-
+	protected override async Task<IResponse> OnDeleteAsync(InsuranceType model)
+	{
+		var response = await Mediator.Send(new DeleteInsuranceTypeCommand { Id = model.Id });
+		return response;
+	}
 }
