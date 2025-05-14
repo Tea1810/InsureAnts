@@ -1,0 +1,31 @@
+﻿@using InsureAnts.Application.Features.InsuranceTypes
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Shared
+
+@inherits AppDialogEditFormComponent<EditInsuranceTypeCommand, InsuranceType>
+
+<MudDialog>
+	<DialogContent>
+		<div Style="display: flex; align-items: center; width: 100%; margin-bottom: 20px">
+			<MudText Typo="Typo.h6">@Title</MudText>
+		</div>
+
+		<MudForm @ref="Form" Model="@Command">
+			<MudStack>
+				<MudTextField @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
+			</MudStack>
+		</MudForm>
+
+	</DialogContent>
+	<DialogActions>
+		<div class="d-flex justify-space-between mud-width-full">
+			<MudButton OnClick="Cancel">Cancel</MudButton>
+			<MudButton Color="Color.Primary" OnClick="Submit">Add</MudButton>
+		</div>
+	</DialogActions>
+</MudDialog>
+
+@code {
+	[Parameter]
+	public string? Title { get; set; }
+}

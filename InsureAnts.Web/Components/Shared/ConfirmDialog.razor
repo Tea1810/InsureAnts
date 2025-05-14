@@ -1,0 +1,17 @@
+﻿<MudDialog DefaultFocus="DefaultFocus.FirstChild">
+	<DialogContent>
+		@Message
+	</DialogContent>
+	<DialogActions>
+		<MudButton OnClick="@MudDialog.Cancel">No</MudButton>
+		<MudButton Color="Color.Primary" OnClick="@(() => MudDialog.CloseOk(true))">Yes</MudButton>
+	</DialogActions>
+</MudDialog>
+
+@code {
+	[Parameter]
+	public MarkupString Message { get; set; }
+
+	[CascadingParameter]
+	protected MudDialogInstance MudDialog { get; set; } = default!;
+}
