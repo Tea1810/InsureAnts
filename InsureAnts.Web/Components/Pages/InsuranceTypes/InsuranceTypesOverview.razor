@@ -1,4 +1,5 @@
 ﻿@page "/insuranceTypesOverview"
+@using InsureAnts.Application.Features.Abstractions
 @using InsureAnts.Application.Features.InsuranceTypes
 @using InsureAnts.Domain.Entities
 @using InsureAnts.Web.Components.Shared
@@ -53,4 +54,9 @@
 
 @code {
 
+	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
+	{
+		parameters.Add("Title", "Add New Insurance Type");
+		base.ConfigureAddParameters(parameters, options);
+	}
 }
