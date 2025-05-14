@@ -18,4 +18,6 @@ public class Insurance : Entity<int>
     public InsuranceType? InsuranceType { get; set; }
     public List<Package>? Packages { get; set; }
     public List<Client>? Clients { get; set; }
+
+    public override string ToString() => Name;
 }

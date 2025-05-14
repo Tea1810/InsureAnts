@@ -1,0 +1,48 @@
+﻿@using InsureAnts.Application.Features.Insurances
+@using InsureAnts.Application.Features.Packs
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Shared
+@inherits AppDialogAddFormComponent<AddPackageCommand, Package>
+
+<MudDialog>
+	<DialogContent>
+		<div Style="display: flex; align-items: center; width: 100%; margin-bottom: 20px">
+			<MudText Typo="Typo.h6">@Title</MudText>
+		</div>
+
+		<MudForm @ref="Form" Model="@Command">
+			<MudStack>
+				<MudTextField @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
+				<MudTextField @bind-Value="Command.Description" Label="Description" Required RequiredError="Description is required." />
+				<MudSelect T="Insurance" Label="Insurances" @bind-SelectedValues="Command.Insurances" MultiSelection>
+					@foreach (var insurance in _insurances)
+					{
+						<MudSelectItem T="Insurance" Value="insurance">@insurance.Name</MudSelectItem>
+					}
+				</MudSelect>
+				<MudTextField @bind-Value="Command.Premium" InputMode="InputMode.numeric" Label="Premium" Required RequiredError="Premium is required." />
+				<MudTextField @bind-Value="Command.DurationInDays" InputMode="InputMode.numeric" Label="Duration (days)" Required RequiredError="Duration is required." />
+			</MudStack>
+		</MudForm>
+
+	</DialogContent>
+	<DialogActions>
+		<div class="d-flex justify-space-between mud-width-full">
+			<MudButton OnClick="Cancel">Cancel</MudButton>
+			<MudButton Color="Color.Primary" OnClick="Submit">Add</MudButton>
+		</div>
+	</DialogActions>
+</MudDialog>
+
+@code {
+	[Parameter]
+	public string? Title { get; set; }
+
+	private List<Insurance> _insurances = [];
+
+	protected override async Task OnParametersSetAsync()
+	{
+		var response = await Mediator.Send(new GetInsurancesQuery());
+		_insurances = response.Items.ToList();
+	}
+}

@@ -1,7 +1,101 @@
 ﻿@page "/packagesOverview"
+@using InsureAnts.Application.Features.Abstractions
+@using InsureAnts.Application.Features.Insurances
+@using InsureAnts.Application.Features.Packages
+@using InsureAnts.Application.Features.Packs
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Shared
 
-<h3>Packages</h3>
+@inherits AppEditableTableComponent<GetPackagesQuery, Package, AddPackageForm, EditPackageForm>
+<MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
+	<ToolBarContent>
+		<div class="d-flex gap-4 w-100 justify-space-between align-end">
+			<MudText Typo="Typo.h6">Packages</MudText>
+			<MudTextField @bind-Value="QueryRequest.SearchTerm"
+						  T="string"
+						  OnKeyUp="ReloadTableOnEnter"
+						  Placeholder="Search"
+						  Clearable="true"
+						  Adornment="Adornment.Start"
+						  AdornmentIcon="@Icons.Material.Filled.Search"
+						  IconSize="Size.Medium"
+						  Class="mt-0"
+						  autocomplete="off"
+						  id="filter" />
+
+			<MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
+		</div>
+	</ToolBarContent>
+	<HeaderContent>
+		<MudTh>
+			<MudTableSortLabel T="Package" SortLabel="@nameof(Package.Name)" InitialDirection="SortDirection.Ascending">
+				Name
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Package">
+				Description
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Package" SortLabel="@nameof(Package.Premium)" InitialDirection="SortDirection.Ascending">
+				Premium
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Package" SortLabel="@nameof(Package.DurationInDays)" InitialDirection="SortDirection.Ascending">
+				Duration
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Package" SortLabel="@nameof(Package.Status)" InitialDirection="SortDirection.Ascending">
+				Status
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd>
+			<MudText>@context.Name</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Description</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Premium</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.DurationInDays</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Status</MudText>
+		</MudTd>
+		<MudTd Class="d-flex justify-end">
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" />
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
+		</MudTd>
+	</RowTemplate>
+	<NoRecordsContent>
+		<MudText>There are no items to show in this view.</MudText>
+	</NoRecordsContent>
+	<LoadingContent>
+		<MudText>Loading...</MudText>
+	</LoadingContent>
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+</MudTable>
 
 @code {
+	protected override async Task<IResponse> OnDeleteAsync(Package model)
+	{
+		var response = await Mediator.Send(new DeletePackageCommand { Id = model.Id });
+		return response;
+	}
 
+	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
+	{
+		parameters.Add("Title", "Add New Package");
+		base.ConfigureAddParameters(parameters, options);
+	}
 }

@@ -10,15 +10,13 @@ namespace InsureAnts.Application.Features.Packs;
 
 public class AddPackageCommand : ICommand<IResponse<Package>>
 {
-    public required string Name { get; set; }
-    public required string Description { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public double Premium { get; set; }
     public AvailabilityStatus Status { get; set; }
     public int DurationInDays { get; set; }
 
-    public List<Insurance>? Insurances { get; set; }
-
-    public List<ClientPackage>? ClientPackages { get; set; }
+    public IEnumerable<Insurance> Insurances { get; set; } = [];
 }
 
 [UsedImplicitly]
@@ -46,6 +44,11 @@ internal class AddPackageCommandHandler : ICommandHandler<AddPackageCommand, IRe
     public async ValueTask<IResponse<Package>> Handle(AddPackageCommand command, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<Package>(command);
+
+        foreach (var item in entity.Insurances!)
+        {
+            _unitOfWork.Insurances.Track(item);
+        }
 
         _unitOfWork.Packages.Add(entity);
 

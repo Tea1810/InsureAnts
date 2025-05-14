@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InsureAnts.Application.Data_Queries;
+﻿using InsureAnts.Application.Data_Queries;
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Common;
@@ -15,7 +10,7 @@ namespace InsureAnts.Application.Features.Packages;
 public class GetPackagesQuery : AbstractQueryRequest<Package>
 {
     public string SearchTerm { get; set; } = string.Empty;
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public AvailabilityStatus Status { get; set; }
 
     public override IQueryable<Package> ApplyFilter(IQueryable<Package> source)
