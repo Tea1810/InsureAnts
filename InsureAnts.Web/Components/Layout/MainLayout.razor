@@ -10,27 +10,31 @@
 		<MudLink Color="Color.Inherit" Href="/" Underline="Underline.None" Style="white-space:nowrap; padding-right:15px">
 			<MudText Typo="Typo.h5">InsureAnts</MudText>
 		</MudLink>
+		<div class="d-flex mud-width-full">
+			<div class="d-flex justify-content-center align-items-center gap-1 w-100 nav-item">
+				<NavLink href="/clientsOverview">
+					<MudText Class="navbar-text tab-text">Clients</MudText>
+				</NavLink>
 
-		<div class="d-flex justify-content-center align-items-center gap-1 w-100 nav-item">
-			<NavLink href="/clientsOverview">
-				<MudText Class="navbar-text tab-text">Clients</MudText>
-			</NavLink>
+				<NavLink href="/dealsOverview">
+					<MudText Class="navbar-text tab-text">Deals</MudText>
+				</NavLink>
 
-			<NavLink href="/dealsOverview">
-				<MudText Class="navbar-text tab-text">Deals</MudText>
-			</NavLink>
+				<NavLink href="/insurancesOverview">
+					<MudText Class="navbar-text tab-text">Insurances</MudText>
+				</NavLink>
 
-			<NavLink href="/insurancesOverview">
-				<MudText Class="navbar-text tab-text">Insurances</MudText>
-			</NavLink>
+				<NavLink href="/insuranceTypesOverview">
+					<MudText Class="navbar-text tab-text">Insurances Types</MudText>
+				</NavLink>
 
-			<NavLink href="/insuranceTypesOverview">
-				<MudText Class="navbar-text tab-text">Insurances Types</MudText>
-			</NavLink>
-
-			<NavLink href="/packagesOverview">
-				<MudText Class="navbar-text tab-text">Packages</MudText>
-			</NavLink>
+				<NavLink href="/packagesOverview">
+					<MudText Class="navbar-text tab-text">Packages</MudText>
+				</NavLink>
+				<NavLink href="/supportTicketsOverview">
+					<MudText Class="navbar-text tab-text">Tickets</MudText>
+				</NavLink>
+			</div>
 		</div>
 	</MudAppBar>
 	<MudMainContent>
@@ -39,7 +43,12 @@
 		</div>
 	</MudMainContent>
 </MudLayout>
-
+<MudFab Icon="@Icons.Material.Filled.Chat"
+		Color="Color.Primary"
+		Style=" position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 9999;" />
 @code
 {
 }

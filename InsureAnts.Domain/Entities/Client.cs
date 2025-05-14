@@ -21,4 +21,6 @@ public class Client : Entity<int>
     public List<Insurance>? Insurances { get; set; }
     public List<ClientPackage>? ClientPackages { get; set; }
     public List<SupportTicket>? Tickets { get; set; }
+
+    public override string ToString() => FirstName + LastName;
 }
