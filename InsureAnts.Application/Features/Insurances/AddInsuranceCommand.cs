@@ -10,16 +10,15 @@ namespace InsureAnts.Application.Features.Insurances;
 
 public class AddInsuranceCommand : ICommand<IResponse<Insurance>>
 {
-    public required string Name { get; set; }
-    public required string Description { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public double Premium { get; set; }
     public double Coverage { get; set; }
     public int DurationInDays { get; set; }
     public AvailabilityStatus Status { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public int InsuranceTypeId { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public InsuranceType? InsuranceType { get; set; }
+    public InsuranceType? InsuranceType { get; set; } = null;
 }
 
 [UsedImplicitly]

@@ -60,4 +60,10 @@
 		var response = await Mediator.Send(new DeleteInsuranceTypeCommand { Id = model.Id });
 		return response;
 	}
+
+	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
+	{
+		parameters.Add("Title", "Add New Insurance Type");
+		base.ConfigureAddParameters(parameters, options);
+	}
 }
