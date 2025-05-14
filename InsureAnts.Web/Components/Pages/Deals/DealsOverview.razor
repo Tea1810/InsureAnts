@@ -3,7 +3,7 @@
 @using InsureAnts.Application.Features.Deals
 @using InsureAnts.Domain.Entities
 @using InsureAnts.Web.Components.Shared
-@inherits AppEditableTableComponent<GetDealsQuery, Deal>
+@inherits AppEditableTableComponent<GetDealsQuery, Deal, AddDealForm, EditDealForm>
 <MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
 	<ToolBarContent>
 		<div class="d-flex gap-4 w-100 justify-space-between align-end">
@@ -20,7 +20,7 @@
 						  autocomplete="off"
 						  id="filter" />
 
-			<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
+			<MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
 		</div>
 	</ToolBarContent>
 	<HeaderContent>
