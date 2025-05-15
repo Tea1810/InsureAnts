@@ -87,6 +87,12 @@
 			<MudText>@context.Status</MudText>
 		</MudTd>
 		<MudTd Class="d-flex justify-end">
+			<MudTooltip Text="Insurances">
+				<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Inbox" OnClick="@(()=>EditInsurancesAsync(context))" />
+			</MudTooltip>
+			<MudTooltip Text="Deals">
+				<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" OnClick="@(()=>EditDealsAsync(context))" />
+			</MudTooltip>
 			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditItemAsync(context))" />
 			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
 		</MudTd>
@@ -129,22 +135,41 @@
 		base.ConfigureAddParameters(parameters, options);
 	}
 
-	// protected async Task EditDealsAsync(Client model)
-	// {
-	// 	var parameters = model.ToModelDialogParameters();
-	// 	parameters.Add("Title", GetEditTitle(model));
+	protected async Task EditDealsAsync(Client model)
+	{
+		var parameters = model.ToModelDialogParameters();
+		parameters.Add("Title", GetEditTitle(model));
 
-	// 	var dialog = await DialogService.ShowAsync<TEditComponent>(
-	// 		GetEditTitle(model),
-	// 		parameters,
-	// 		new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true }
-	// 	);
+		var dialog = await DialogService.ShowAsync<EditClientDealsForm>(
+			GetEditTitle(model),
+			parameters,
+			new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true }
+		);
 
-	// 	var result = await dialog.Result;
+		var result = await dialog.Result;
 
-	// 	if (!result.Canceled)
-	// 	{
-	// 		await ReloadTableServerData();
-	// 	}
-	// }
+		if (!result.Canceled)
+		{
+			await ReloadTableServerData();
+		}
+	}
+
+	protected async Task EditInsurancesAsync(Client model)
+	{
+		var parameters = model.ToModelDialogParameters();
+		parameters.Add("Title", GetEditTitle(model));
+
+		var dialog = await DialogService.ShowAsync<EditClientInsurancesForm>(
+			GetEditTitle(model),
+			parameters,
+			new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true }
+		);
+
+		var result = await dialog.Result;
+
+		if (!result.Canceled)
+		{
+			await ReloadTableServerData();
+		}
+	}
 }
