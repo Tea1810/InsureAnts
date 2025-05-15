@@ -1,5 +1,41 @@
-﻿<h3>EditDealForm</h3>
+﻿@using InsureAnts.Application.Features.Deals
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Shared
+@inherits AppDialogEditFormComponent<EditDealCommand, Deal>
+
+<MudDialog>
+	<DialogContent>
+		<div Style="display: flex; align-items: center; width: 100%; margin-bottom: 20px">
+			<MudText Typo="Typo.h6">@Title</MudText>
+		</div>
+
+		<MudForm @ref="Form" Model="@Command">
+			<MudStack>
+				<MudTextField @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
+				<MudTextField @bind-Value="Command.Description" Label="Description" Required RequiredError="Discount is required." />
+				<MudTextField @bind-Value="Command.DiscountPercentage" Label="Discount" Required RequiredError="Discount is required." />
+				<MudTextField @bind-Value="Command.DurationInDays" InputMode="InputMode.numeric" Label="Duration (days)" Required RequiredError="Duration is required." />
+			</MudStack>
+		</MudForm>
+
+	</DialogContent>
+	<DialogActions>
+		<div class="d-flex justify-space-between mud-width-full">
+			<MudButton OnClick="Cancel">Cancel</MudButton>
+			<MudButton Color="Color.Primary" OnClick="Submit">Add</MudButton>
+		</div>
+	</DialogActions>
+</MudDialog>
 
 @code {
+	[Parameter]
+	public string? Title { get; set; }
 
+	private List<Deal> _deals = [];
+
+	protected override async Task OnParametersSetAsync()
+	{
+		var response = await Mediator.Send(new GetDealsQuery());
+		_deals = response.Items.ToList();
+	}
 }

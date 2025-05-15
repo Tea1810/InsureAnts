@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Domain.Entities;
@@ -17,6 +18,15 @@ namespace InsureAnts.Application.Features.InsuranceTypes
         protected override IQueryable<InsuranceType> GetTrackedQuery() => UnitOfWork.InsuranceTypes.AllTracked();
     }
 
+
+    [UsedImplicitly]
+    internal class EditInsuranceTypeCommandValidator : AbstractValidator<InsuranceType>
+    {
+        public EditInsuranceTypeCommandValidator()
+        {
+            RuleFor(command => command.Name).MaximumLength(50).NotEmpty() ;
+        }
+    }
     internal class EditInsuranceTypeCommandHandler : ICommandHandler<EditInsuranceTypeCommand, IResponse<InsuranceType>>
     {
         private readonly IUnitOfWork _unitOfWork;

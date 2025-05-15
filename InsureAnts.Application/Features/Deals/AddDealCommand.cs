@@ -9,8 +9,8 @@ namespace InsureAnts.Application.Features.Deals;
 
 public class AddDealCommand : ICommand<IResponse<Deal>>
 {
-    public  string Name { get; set; }
-    public  string Description { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public int DurationInDays { get; set; }
     public double DiscountPercentage { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Domain.Entities;
@@ -14,7 +15,7 @@ public class EditClientCommand : EditCommand<Client, Client, int>
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
+    public Gender Gender { get; set; }
     public AvailabilityStatus Status { get; set; }
     public int NumberOfDeals { get; set; }
 
@@ -27,6 +28,20 @@ public class EditClientCommand : EditCommand<Client, Client, int>
 internal class EditClientCommandInitializer(IUnitOfWork unitOfWork) : EditCommandInitializer<EditClientCommand, Client, Client, int>(unitOfWork)
 {
     protected override IQueryable<Client> GetTrackedQuery() => UnitOfWork.Clients.AllTracked();
+}
+
+
+[UsedImplicitly]
+internal class EditClientCommandValidator : AbstractValidator<Client>
+{
+    public EditClientCommandValidator()
+    {
+        RuleFor(command => command.FirstName).MaximumLength(50).NotEmpty();
+        RuleFor(command => command.LastName).MaximumLength(50).NotEmpty();
+        RuleFor(command => command.Email).EmailAddress().NotEmpty();
+        RuleFor(command => command.Phone).NotEmpty();
+        RuleFor(command => command.Address).NotEmpty();
+    }
 }
 
 internal class EditClientCommandHandler : ICommandHandler<EditClientCommand, IResponse<Client>>

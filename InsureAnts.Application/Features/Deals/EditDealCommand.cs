@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Domain.Entities;
@@ -18,6 +19,18 @@ public class EditDealCommand : EditCommand<Deal, Deal, int>
 internal class EditDealCommandInitializer(IUnitOfWork unitOfWork) : EditCommandInitializer<EditDealCommand, Deal, Deal, int>(unitOfWork)
 {
     protected override IQueryable<Deal> GetTrackedQuery() => UnitOfWork.Deals.AllTracked();
+}
+
+[UsedImplicitly]
+internal class EditDealCommandValidator : AbstractValidator<Deal>
+{
+    public EditDealCommandValidator()
+    {
+        RuleFor(command => command.Name).MaximumLength(50).NotEmpty();
+        RuleFor(command => command.Description).MaximumLength(50).NotEmpty();
+        RuleFor(command => command.DurationInDays).GreaterThanOrEqualTo(1);
+        RuleFor(command => command.DiscountPercentage).GreaterThanOrEqualTo(1);
+    }
 }
 
 internal class EditDealCommandHandler : ICommandHandler<EditDealCommand, IResponse<Deal>>

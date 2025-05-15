@@ -61,7 +61,7 @@
 		return response;
 	}
 
-	protected override string GetEditTitle(InsuranceType model) => $"Edit Insurance Type: {model.Name}";
+	protected override string GetEditTitle(InsuranceType model) => $"Edit Insurance Type {model.Name}";
 
 	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
 	{
