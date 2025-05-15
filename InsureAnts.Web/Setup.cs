@@ -48,6 +48,10 @@ internal static class Setup
 
         app.UseHttpsRedirection().UseStaticFiles();
 
+        app.MapRazorPages();
+
+        app.UseAuthentication();
+
         app.UseAntiforgery();
 
         app.MapRazorComponents<App>().AddInteractiveServerRenderMode();

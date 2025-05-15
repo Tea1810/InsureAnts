@@ -1,10 +1,12 @@
 ﻿using InsureAnts.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace InsureAnts.Infrastructure.DataAccess;
 
-internal class InsureAntsDbContext : DbContext
+public class InsureAntsDbContext : IdentityDbContext<IdentityUser>
 {
     public InsureAntsDbContext(DbContextOptions<InsureAntsDbContext> options) : base(options)
     { }

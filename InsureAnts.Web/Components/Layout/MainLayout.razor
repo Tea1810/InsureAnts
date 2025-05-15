@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudDialogProvider MaxWidth="MaxWidth.Medium" FullWidth="true" CloseOnEscapeKey="true" />
@@ -32,7 +33,22 @@
 				<MudText Class="navbar-text tab-text">Packages</MudText>
 			</NavLink>
 		</div>
+
+		<!-- Authorization UI -->
+		<AuthorizeView>
+			<Authorized Context="auth">
+				<MudSpacer />
+				<MudText Class="me-2">Hello, @auth.User.Identity?.Name!</MudText>
+				<MudButton Variant="Variant.Outlined" Color="Color.Inherit" OnClick="Logout">Logout</MudButton>
+			</Authorized>
+			<NotAuthorized>
+				<MudSpacer />
+				<MudButton Variant="Variant.Outlined" Color="Color.Inherit" Href="Identity/Account/Login">Login</MudButton>
+				<MudButton Variant="Variant.Outlined" Color="Color.Inherit" Href="Identity/Account/Register">Register</MudButton>
+			</NotAuthorized>
+		</AuthorizeView>
 	</MudAppBar>
+
 	<MudMainContent>
 		<div class="pa-4">
 			@Body
@@ -40,6 +56,12 @@
 	</MudMainContent>
 </MudLayout>
 
-@code
-{
+@code {
+
+	[Inject] NavigationManager Navigation { get; set; } = default!;
+
+	private void Logout()
+	{
+		Navigation.NavigateTo("Identity/Account/Logout", forceLoad: true);
+	}
 }
