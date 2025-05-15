@@ -1,22 +1,41 @@
-﻿using InsureAnts.Application.Data_Queries;
+﻿using System.Reflection;
+using InsureAnts.Application.Data_Queries;
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Common;
 using InsureAnts.Domain.Entities;
 using InsureAnts.Domain.Enums;
+using Microsoft.SqlServer.Management.Smo.Agent;
 
 namespace InsureAnts.Application.Features.Insurances;
 
 public class GetInsurancesQuery : AbstractQueryRequest<Insurance>
 {
     public string SearchTerm { get; set; } = string.Empty;
+    public AvailabilityStatusFilter StatusFilter { get; set; } = AvailabilityStatusFilter.All;
+    public string InsuranceTypeFilter { get; set; } = string.Empty;
 
-    public AvailabilityStatus Status { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public double Premium { get; set; }
-    public double Coverage { get; set; }
-    public int DurationInDays { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public override IQueryable<Insurance> ApplyFilter(IQueryable<Insurance> source)
+    {
+        if (!string.IsNullOrEmpty(SearchTerm))
+        {
+            source = source.Where(i => i.Name.Contains(SearchTerm));
+        }
+
+        if (!string.IsNullOrEmpty(InsuranceTypeFilter))
+        {
+            source = source.Where(i => i.InsuranceType!.Name.Contains(InsuranceTypeFilter));
+        }
+
+        source = StatusFilter switch
+        {
+            AvailabilityStatusFilter.Active => source.Where(i => i.Status == AvailabilityStatus.Active),
+            AvailabilityStatusFilter.Inactive => source.Where(i => i.Status == AvailabilityStatus.Inactive),
+            _ => source
+        };
+
+        return base.ApplyFilter(source);
+    }
 }
 
 internal class GetInsurancesQueryHandler : IQueryHandler<GetInsurancesQuery, QueryResult<Insurance>>

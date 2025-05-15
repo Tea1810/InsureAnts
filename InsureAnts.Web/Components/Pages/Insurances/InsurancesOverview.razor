@@ -1,8 +1,10 @@
 ﻿@page "/insurancesOverview"
 
 @using InsureAnts.Application.Features.Abstractions
+@using InsureAnts.Application.Features.InsuranceTypes
 @using InsureAnts.Application.Features.Insurances
 @using InsureAnts.Domain.Entities
+@using InsureAnts.Domain.Enums;
 @using InsureAnts.Web.Components.Shared
 
 @inherits AppEditableTableComponent<GetInsurancesQuery, Insurance, AddInsuranceForm,EditInsuranceForm>
@@ -22,6 +24,20 @@
 						  Class="mt-0"
 						  autocomplete="off"
 						  id="filter" />
+
+			<MudSelect T="string" Label="Insurance Type Filter" Value="QueryRequest.InsuranceTypeFilter" ValueChanged="OnTypeFilterChanged" Clearable>
+				@foreach (var type in _insuranceTypes)
+				{
+					<MudSelectItem T="string" Value="type.Name"> @type.Name</MudSelectItem>
+				}
+			</MudSelect>
+
+			<MudSelect T="AvailabilityStatusFilter" Label="Status Filter" Value="QueryRequest.StatusFilter" ValueChanged="OnStatusFilterChanged">
+				@foreach (var status in Enum.GetValues<AvailabilityStatusFilter>())
+				{
+					<MudSelectItem T="AvailabilityStatusFilter" Value="status">@status.ToString()</MudSelectItem>
+				}
+			</MudSelect>
 
 			<MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
 		</div>
@@ -109,10 +125,30 @@
 </MudTable>
 
 @code {
+	private List<InsuranceType> _insuranceTypes = [];
+
 	protected override async Task<IResponse> OnDeleteAsync(Insurance model)
 	{
 		var response = await Mediator.Send(new DeleteInsuranceCommand { Id = model.Id });
 		return response;
+	}
+
+	private async Task OnTypeFilterChanged(string newValue)
+	{
+		QueryRequest.InsuranceTypeFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	private async Task OnStatusFilterChanged(AvailabilityStatusFilter newValue)
+	{
+		QueryRequest.StatusFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var response = await Mediator.Send(new GetInsuranceTypesQuery());
+		_insuranceTypes = response.Items.ToList();
 	}
 
 	protected override string GetEditTitle(Insurance model) => $"Edit Insurance {model.Name}";

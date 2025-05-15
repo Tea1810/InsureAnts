@@ -4,6 +4,7 @@
 @using InsureAnts.Application.Features.Packages
 @using InsureAnts.Application.Features.Packs
 @using InsureAnts.Domain.Entities
+@using InsureAnts.Domain.Enums;
 @using InsureAnts.Web.Components.Shared
 
 @inherits AppEditableTableComponent<GetPackagesQuery, Package, AddPackageForm, EditPackageForm>
@@ -23,6 +24,19 @@
 						  autocomplete="off"
 						  id="filter" />
 
+			<MudSelect T="string" Label="Insurance Filter" Value="QueryRequest.InsuranceFilter" ValueChanged="OnInsuranceFilterChanged">
+				@foreach (var insurance in _insurances)
+				{
+					<MudSelectItem Value="insurance.Name">@insurance.Name</MudSelectItem>
+				}
+			</MudSelect>
+
+			<MudSelect T="AvailabilityStatusFilter" Label="Status Filter" Value="QueryRequest.StatusFilter" ValueChanged="OnStatusFilterChanged">
+				@foreach (var status in Enum.GetValues<AvailabilityStatusFilter>())
+				{
+					<MudSelectItem T="AvailabilityStatusFilter" Value="status">@status.ToString()</MudSelectItem>
+				}
+			</MudSelect>
 			<MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
 		</div>
 	</ToolBarContent>
@@ -87,6 +101,26 @@
 </MudTable>
 
 @code {
+	List<Insurance> _insurances { get; set; } = [];
+
+	private async Task OnStatusFilterChanged(AvailabilityStatusFilter newValue)
+	{
+		QueryRequest.StatusFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	private async Task OnInsuranceFilterChanged(string newValue)
+	{
+		QueryRequest.InsuranceFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var response = await Mediator.Send(new GetInsurancesQuery());
+		_insurances = response.Items.ToList();
+	}
+
 	protected override async Task<IResponse> OnDeleteAsync(Package model)
 	{
 		var response = await Mediator.Send(new DeletePackageCommand { Id = model.Id });
