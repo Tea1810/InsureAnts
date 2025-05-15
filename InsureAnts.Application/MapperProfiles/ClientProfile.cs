@@ -11,7 +11,9 @@ internal class ClientProfile : Profile
         CreateMap<AddClientCommand, Client>();
         CreateMap<Client, AddClientCommand>();
 
-        CreateMap<EditClientCommand, Client>();
+        CreateMap<EditClientCommand, Client>()
+            .ForMember(s => s.Deals, d => d.Ignore())
+            .ForMember(s => s.Insurances, d => d.Ignore());
         CreateMap<Client, EditClientCommand>();
     }
 }

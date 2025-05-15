@@ -11,5 +11,15 @@ public class Deal : Entity<int>
     public double DiscountPercentage { get; set; }
 
     public List<ClientPackage>? ClientPackages { get; set; }
-    public List<Client>? Clients{ get; set; }
+    public List<Client>? Clients { get; set; }
+
+    public override string ToString() => Name;
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Deal other) return false;
+        return Id == other.Id;
+    }
+
+    public override int GetHashCode() => Id.GetHashCode();
 }

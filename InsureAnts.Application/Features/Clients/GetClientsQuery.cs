@@ -52,9 +52,9 @@ internal class GetFeedAlertsQueryHandler : IQueryHandler<GetClientsQuery, QueryR
     public ValueTask<QueryResult<Client>> Handle(GetClientsQuery query, CancellationToken cancellationToken)
     {
         return _unitOfWork.Clients.All()
-            .Include(c => c.Deals)
-            .Include(c => c.Insurances)
-            .Include(c => c.ClientPackages)
+            .Include(c => c.Deals, asSplitQuery: true)
+            .Include(c => c.Insurances, asSplitQuery: true)
+            .Include(c => c.ClientPackages, asSplitQuery: true)
             .GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }

@@ -19,15 +19,15 @@ public class EditClientCommand : EditCommand<Client, Client, int>
     public AvailabilityStatus Status { get; set; }
     public int NumberOfDeals { get; set; }
 
-    public List<Deal>? Deals { get; set; }
-    public List<Insurance>? Insurances { get; set; }
-    public List<ClientPackage>? ClientPackages { get; set; }
+    public IEnumerable<Deal>? Deals { get; set; } = [];
+    public IEnumerable<Insurance>? Insurances { get; set; } = [];
+    public IEnumerable<ClientPackage>? ClientPackages { get; set; } = [];
 }
 
 [UsedImplicitly]
 internal class EditClientCommandInitializer(IUnitOfWork unitOfWork) : EditCommandInitializer<EditClientCommand, Client, Client, int>(unitOfWork)
 {
-    protected override IQueryable<Client> GetTrackedQuery() => UnitOfWork.Clients.AllTracked();
+    protected override IQueryable<Client> GetTrackedQuery() => UnitOfWork.Clients.AllTracked().Include(c => c.Deals, asSplitQuery: true).Include(c => c.Insurances, asSplitQuery: true);
 }
 
 
@@ -58,11 +58,28 @@ internal class EditClientCommandHandler : ICommandHandler<EditClientCommand, IRe
     public async ValueTask<IResponse<Client>> Handle(EditClientCommand command, CancellationToken cancellationToken)
     {
         var client = command.Entity!;
+        _mapper.Map(command, client);
 
-        var entity = _mapper.Map(command, client);
+        client.Deals!.RemoveAll(d => command.Deals!.All(cd => cd.Id != d.Id));
+        client.Insurances!.RemoveAll(i => command.Insurances!.All(ci => ci.Id != i.Id));
+
+        var newDeals = command.Deals!.Where(cd => client.Deals.All(d => d.Id != cd.Id));
+        var newInsurances = command.Insurances!.Where(ci => client.Insurances.All(i => i.Id != ci.Id));
+
+        foreach (var newDeal in newDeals)
+        {
+            _unitOfWork.Deals.Track(newDeal);
+            client.Deals.Add(newDeal);
+        }
+
+        foreach (var newInsurance in newInsurances)
+        {
+            _unitOfWork.Insurances.Track(newInsurance);
+            client.Insurances.Add(newInsurance);
+        }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Response.Success(Texts.Updated<Client>(entity.Id.ToString())).For(entity);
+        return Response.Success(Texts.Updated<Client>(client.Id.ToString())).For(client);
     }
 }

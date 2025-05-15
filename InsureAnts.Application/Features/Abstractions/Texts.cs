@@ -23,8 +23,4 @@ public static class Texts
     public static string NotFound<TKey>(string entityName, TKey id) => $"Could not find {entityName} with Id {id}. It may have been deleted in the meantime.";
 
     public static string NotFound<T, TKey>(TKey id) => NotFound(EntityNameAttribute<T>.Name, id);
-
-    public static string RemovedHeader(string header, string detailType) => $"Header {header} was removed.\nDetail Type {detailType} was affected by this update!";
-
-    public static string NewHeader(string header) => $"Header {header} was added!";
 }
