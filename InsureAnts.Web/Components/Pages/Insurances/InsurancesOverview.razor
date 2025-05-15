@@ -4,7 +4,9 @@
 @using InsureAnts.Application.Features.Insurances
 @using InsureAnts.Domain.Entities
 @using InsureAnts.Web.Components.Shared
+
 @inherits AppEditableTableComponent<GetInsurancesQuery, Insurance, AddInsuranceForm,EditInsuranceForm>
+
 <MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
 	<ToolBarContent>
 		<div class="d-flex gap-4 w-100 justify-space-between align-end">
@@ -56,7 +58,7 @@
 			</MudTableSortLabel>
 		</MudTh>
 		<MudTh>
-				Description
+			Description
 		</MudTh>
 		<MudTh>
 			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.CreatedAt)" InitialDirection="SortDirection.Ascending">
@@ -91,7 +93,7 @@
 			<MudText>@context.CreatedAt</MudText>
 		</MudTd>
 		<MudTd Class="d-flex justify-end">
-			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" />
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditItemAsync(context))" />
 			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
 		</MudTd>
 	</RowTemplate>
@@ -112,6 +114,8 @@
 		var response = await Mediator.Send(new DeleteInsuranceCommand { Id = model.Id });
 		return response;
 	}
+
+	protected override string GetEditTitle(Insurance model) => $"Edit Insurance {model.Name}";
 
 	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
 	{

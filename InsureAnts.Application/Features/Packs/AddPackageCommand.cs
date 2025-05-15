@@ -24,8 +24,8 @@ internal class AddPackageCommandValidator : AbstractValidator<Package>
 {
     public AddPackageCommandValidator()
     {
-        RuleFor(command => command.Name).MaximumLength(50);
-        RuleFor(command => command.Description).MaximumLength(200);
+        RuleFor(command => command.Name).MaximumLength(256);
+        RuleFor(command => command.Description).MaximumLength(500);
         RuleFor(command => command.Status).IsInEnum();
     }
 }
@@ -53,6 +53,8 @@ internal class AddPackageCommandHandler : ICommandHandler<AddPackageCommand, IRe
         _unitOfWork.Packages.Add(entity);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        _unitOfWork.Insurances.UntrackAll();
 
         return Response.Success(Texts.Created<Package>($"for feed {entity.Id}")).For(entity);
     }

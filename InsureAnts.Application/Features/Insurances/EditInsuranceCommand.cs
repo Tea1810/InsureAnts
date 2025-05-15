@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using InsureAnts.Application.DataAccess.Interfaces;
 using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Domain.Entities;
@@ -9,9 +10,14 @@ namespace InsureAnts.Application.Features.Insurances;
 
 public class EditInsuranceCommand : EditCommand<Insurance, Insurance, int>
 {
-    public required string Name { get; set; }
-    public required string Description { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public double Premium { get; set; }
+    public double Coverage { get; set; }
+    public int DurationInDays { get; set; }
     public AvailabilityStatus Status { get; set; }
+
+    public InsuranceType? InsuranceType { get; set; } = null;
 }
 
 [UsedImplicitly]
@@ -20,6 +26,19 @@ internal class EditInsuranceCommandInitializer(IUnitOfWork unitOfWork) : EditCom
     protected override IQueryable<Insurance> GetTrackedQuery() => UnitOfWork.Insurances.AllTracked();
 }
 
+
+[UsedImplicitly]
+internal class EditInsuranceCommandValidator : AbstractValidator<Insurance>
+{
+    public EditInsuranceCommandValidator()
+    {
+        RuleFor(command => command.Name).MaximumLength(100);
+        RuleFor(command => command.Description).MaximumLength(500);
+        RuleFor(command => command.Premium).GreaterThanOrEqualTo(1);
+        RuleFor(command => command.Coverage).GreaterThanOrEqualTo(1);
+        RuleFor(command => command.DurationInDays).GreaterThanOrEqualTo(1);
+    }
+}
 internal class EditInsuranceCommandHandler : ICommandHandler<EditInsuranceCommand, IResponse<Insurance>>
 {
     private readonly IUnitOfWork _unitOfWork;

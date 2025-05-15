@@ -9,8 +9,8 @@ namespace InsureAnts.Application.Features.Deals;
 
 public class AddDealCommand : ICommand<IResponse<Deal>>
 {
-    public  string Name { get; set; }
-    public  string Description { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public int DurationInDays { get; set; }
     public double DiscountPercentage { get; set; }
 }
@@ -20,8 +20,8 @@ internal class AddDealCommandValidator : AbstractValidator<Deal>
 {
     public AddDealCommandValidator()
     {
-        RuleFor(command => command.Name).MaximumLength(50);
-        RuleFor(command => command.Description).MaximumLength(200);
+        RuleFor(command => command.Name).MaximumLength(100);
+        RuleFor(command => command.Description).MaximumLength(500);
     }
 }
 
