@@ -54,8 +54,6 @@ internal class AddPackageCommandHandler : ICommandHandler<AddPackageCommand, IRe
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        _unitOfWork.Insurances.UntrackAll();
-
         return Response.Success(Texts.Created<Package>($"for feed {entity.Id}")).For(entity);
     }
 }

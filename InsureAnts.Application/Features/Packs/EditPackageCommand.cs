@@ -15,12 +15,13 @@ public class EditPackageCommand : EditCommand<Package, Package, int>
     public double Premium { get; set; }
     public AvailabilityStatus Status { get; set; }
     public int DurationInDays { get; set; }
+    public IEnumerable<Insurance>? Insurances { get; set; } = [];
 }
 
 [UsedImplicitly]
 internal class EditPackageCommandInitializer(IUnitOfWork unitOfWork) : EditCommandInitializer<EditPackageCommand, Package, Package, int>(unitOfWork)
 {
-    protected override IQueryable<Package> GetTrackedQuery() => UnitOfWork.Packages.AllTracked();
+    protected override IQueryable<Package> GetTrackedQuery() => UnitOfWork.Packages.AllTracked().Include(p => p.Insurances);
 }
 
 [UsedImplicitly]
@@ -51,11 +52,20 @@ internal class EditPackageCommandHandler : ICommandHandler<EditPackageCommand, I
     public async ValueTask<IResponse<Package>> Handle(EditPackageCommand command, CancellationToken cancellationToken)
     {
         var package = command.Entity!;
+        _mapper.Map(command, package);
 
-        var entity = _mapper.Map(command, package);
+        package.Insurances!.RemoveAll(i => command.Insurances!.All(ci => ci.Id != i.Id));
+
+        var newInsurances = command.Insurances!.Where(ci => package.Insurances.All(i => i.Id != ci.Id));
+
+        foreach (var newInsurance in newInsurances)
+        {
+            _unitOfWork.Insurances.Track(newInsurance);
+            package.Insurances.Add(newInsurance);
+        }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Response.Success(Texts.Updated<Package>(entity.Id.ToString())).For(entity);
+        return Response.Success(Texts.Updated<Package>(package.Id.ToString())).For(package);
     }
 }
