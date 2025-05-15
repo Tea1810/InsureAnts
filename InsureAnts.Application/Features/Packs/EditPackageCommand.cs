@@ -5,7 +5,6 @@ using InsureAnts.Application.Features.Abstractions;
 using InsureAnts.Domain.Entities;
 using InsureAnts.Domain.Enums;
 using JetBrains.Annotations;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace InsureAnts.Application.Features.Packs;
 
@@ -22,7 +21,7 @@ public class EditPackageCommand : EditCommand<Package, Package, int>
 [UsedImplicitly]
 internal class EditPackageCommandInitializer(IUnitOfWork unitOfWork) : EditCommandInitializer<EditPackageCommand, Package, Package, int>(unitOfWork)
 {
-    protected override IQueryable<Package> GetTrackedQuery() => UnitOfWork.Packages.AllTracked();
+    protected override IQueryable<Package> GetTrackedQuery() => UnitOfWork.Packages.AllTracked().Include(p => p.Insurances);
 }
 
 [UsedImplicitly]
