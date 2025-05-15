@@ -39,7 +39,7 @@
 		</MudTd>
 
 		<MudTd Class="d-flex justify-end">
-			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" />
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditItemAsync(context))" />
 			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
 		</MudTd>
 	</RowTemplate>
@@ -60,6 +60,8 @@
 		var response = await Mediator.Send(new DeleteInsuranceTypeCommand { Id = model.Id });
 		return response;
 	}
+
+	protected override string GetEditTitle(InsuranceType model) => $"Edit Insurance Type: {model.Name}";
 
 	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
 	{
