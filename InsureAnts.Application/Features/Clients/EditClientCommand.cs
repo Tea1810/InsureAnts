@@ -19,15 +19,15 @@ public class EditClientCommand : EditCommand<Client, Client, int>
     public AvailabilityStatus Status { get; set; }
     public int NumberOfDeals { get; set; }
 
-    public IEnumerable<Deal>? Deals { get; set; }
-    public IEnumerable<Insurance>? Insurances { get; set; }
-    public IEnumerable<ClientPackage>? ClientPackages { get; set; }
+    public IEnumerable<Deal>? Deals { get; set; } = [];
+    public IEnumerable<Insurance>? Insurances { get; set; } = [];
+    public IEnumerable<ClientPackage>? ClientPackages { get; set; } = [];
 }
 
 [UsedImplicitly]
 internal class EditClientCommandInitializer(IUnitOfWork unitOfWork) : EditCommandInitializer<EditClientCommand, Client, Client, int>(unitOfWork)
 {
-    protected override IQueryable<Client> GetTrackedQuery() => UnitOfWork.Clients.AllTracked().Include(c => c.Deals).Include(c => c.Insurances);
+    protected override IQueryable<Client> GetTrackedQuery() => UnitOfWork.Clients.AllTracked().Include(c => c.Deals, asSplitQuery: true).Include(c => c.Insurances, asSplitQuery: true);
 }
 
 
