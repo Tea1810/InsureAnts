@@ -38,9 +38,9 @@ internal class EditClientCommandValidator : AbstractValidator<Client>
     {
         RuleFor(command => command.FirstName).MaximumLength(50).NotEmpty();
         RuleFor(command => command.LastName).MaximumLength(50).NotEmpty();
-        RuleFor(command => command.Email).EmailAddress().NotEmpty();
-        RuleFor(command => command.Phone).NotEmpty();
-        RuleFor(command => command.Address).NotEmpty();
+        RuleFor(command => command.Email).EmailAddress().MaximumLength(100).NotEmpty();
+        RuleFor(command => command.Phone).MaximumLength(15).NotEmpty();
+        RuleFor(command => command.Address).NotEmpty().MaximumLength(100);
     }
 }
 

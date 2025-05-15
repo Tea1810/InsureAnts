@@ -13,11 +13,11 @@
 
 		<MudForm @ref="Form" Model="@Command">
 			<MudStack>
-				<MudTextField @bind-Value="Command.FirstName" Label="First Name" Required RequiredError="Name is required." />
-				<MudTextField @bind-Value="Command.LastName" Label="Last Name" Required RequiredError="Last Name is required." />
-				<MudTextField @bind-Value="Command.Email" InputMode="InputMode.email" InputType="InputType.Email" Label="Email" Required RequiredError="Email is required." />
-				<MudTextField @bind-Value="Command.Phone" Mask="@(new PatternMask("0000000000"))" InputMode="InputMode.tel" InputType="InputType.Telephone" Label="Phone" Required RequiredError="Phone is required." />
-				<MudTextField @bind-Value="Command.Address" Label="Address" Required RequiredError="Address is required." />
+				<MudTextField MaxLength="50" @bind-Value="Command.FirstName" Label="First Name" Required RequiredError="Name is required." />
+				<MudTextField MaxLength="50" @bind-Value="Command.LastName" Label="Last Name" Required RequiredError="Last Name is required." />
+				<MudTextField MaxLength="100" @bind-Value="Command.Email" InputMode="InputMode.email" InputType="InputType.Email" Label="Email" Required RequiredError="Email is required." />
+				<MudTextField MaxLength="15" @bind-Value="Command.Phone" Mask="@(new PatternMask("0000000000"))" InputMode="InputMode.tel" InputType="InputType.Telephone" Label="Phone" Required RequiredError="Phone is required." />
+				<MudTextField MaxLength="100" @bind-Value="Command.Address" Label="Address" Required RequiredError="Address is required." />
 				<MudSelect T="Gender" @bind-Value="Command.Gender">
 					@foreach (var gender in Enum.GetValues<Gender>())
 					{
@@ -31,7 +31,7 @@
 	<DialogActions>
 		<div class="d-flex justify-space-between mud-width-full">
 			<MudButton OnClick="Cancel">Cancel</MudButton>
-			<MudButton Color="Color.Primary" OnClick="Submit">Add</MudButton>
+			<MudButton Color="Color.Primary" OnClick="Submit">Save</MudButton>
 		</div>
 	</DialogActions>
 </MudDialog>

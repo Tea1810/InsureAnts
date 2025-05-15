@@ -24,8 +24,8 @@ internal class AddPackageCommandValidator : AbstractValidator<Package>
 {
     public AddPackageCommandValidator()
     {
-        RuleFor(command => command.Name).MaximumLength(50);
-        RuleFor(command => command.Description).MaximumLength(200);
+        RuleFor(command => command.Name).MaximumLength(256);
+        RuleFor(command => command.Description).MaximumLength(500);
         RuleFor(command => command.Status).IsInEnum();
     }
 }

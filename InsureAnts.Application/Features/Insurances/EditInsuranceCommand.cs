@@ -32,8 +32,8 @@ internal class EditInsuranceCommandValidator : AbstractValidator<Insurance>
 {
     public EditInsuranceCommandValidator()
     {
-        RuleFor(command => command.Name).MaximumLength(50);
-        RuleFor(command => command.Description).MaximumLength(200);
+        RuleFor(command => command.Name).MaximumLength(100);
+        RuleFor(command => command.Description).MaximumLength(500);
         RuleFor(command => command.Premium).GreaterThanOrEqualTo(1);
         RuleFor(command => command.Coverage).GreaterThanOrEqualTo(1);
         RuleFor(command => command.DurationInDays).GreaterThanOrEqualTo(1);

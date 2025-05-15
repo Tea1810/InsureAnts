@@ -24,7 +24,7 @@ namespace InsureAnts.Application.Features.InsuranceTypes
     {
         public EditInsuranceTypeCommandValidator()
         {
-            RuleFor(command => command.Name).MaximumLength(50).NotEmpty() ;
+            RuleFor(command => command.Name).MaximumLength(100).NotEmpty() ;
         }
     }
     internal class EditInsuranceTypeCommandHandler : ICommandHandler<EditInsuranceTypeCommand, IResponse<InsuranceType>>

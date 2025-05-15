@@ -20,8 +20,8 @@ internal class AddDealCommandValidator : AbstractValidator<Deal>
 {
     public AddDealCommandValidator()
     {
-        RuleFor(command => command.Name).MaximumLength(50);
-        RuleFor(command => command.Description).MaximumLength(200);
+        RuleFor(command => command.Name).MaximumLength(100);
+        RuleFor(command => command.Description).MaximumLength(500);
     }
 }
 

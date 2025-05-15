@@ -26,8 +26,8 @@ internal class EditDealCommandValidator : AbstractValidator<Deal>
 {
     public EditDealCommandValidator()
     {
-        RuleFor(command => command.Name).MaximumLength(50).NotEmpty();
-        RuleFor(command => command.Description).MaximumLength(50).NotEmpty();
+        RuleFor(command => command.Name).MaximumLength(100).NotEmpty();
+        RuleFor(command => command.Description).MaximumLength(500).NotEmpty();
         RuleFor(command => command.DurationInDays).GreaterThanOrEqualTo(1);
         RuleFor(command => command.DiscountPercentage).GreaterThanOrEqualTo(1);
     }
