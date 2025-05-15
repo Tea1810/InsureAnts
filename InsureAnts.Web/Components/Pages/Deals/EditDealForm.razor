@@ -30,12 +30,4 @@
 @code {
 	[Parameter]
 	public string? Title { get; set; }
-
-	private List<Deal> _deals = [];
-
-	protected override async Task OnParametersSetAsync()
-	{
-		var response = await Mediator.Send(new GetDealsQuery());
-		_deals = response.Items.ToList();
-	}
 }

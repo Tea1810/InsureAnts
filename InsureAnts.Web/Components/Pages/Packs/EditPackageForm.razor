@@ -22,12 +22,6 @@
 				</MudSelect>
 				<MudTextField @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
 				<MudTextField @bind-Value="Command.Description" Label="Description" Required RequiredError="Description is required." />
-				<MudSelect T="Insurance" Label="Insurances" @bind-SelectedValues="Command.Insurances" MultiSelection>
-					@foreach (var insurance in _insurances)
-					{
-						<MudSelectItem T="Insurance" Value="insurance">@insurance.Name</MudSelectItem>
-					}
-				</MudSelect>
 				<MudTextField @bind-Value="Command.Premium" InputMode="InputMode.numeric" Label="Premium" Required RequiredError="Premium is required." />
 				<MudTextField @bind-Value="Command.DurationInDays" InputMode="InputMode.numeric" Label="Duration (days)" Required RequiredError="Duration is required." />
 			</MudStack>
@@ -48,7 +42,7 @@
 
 	private List<Insurance> _insurances = [];
 
-	protected override async Task OnParametersSetAsync()
+	protected override async Task OnInitializedAsync()
 	{
 		var response = await Mediator.Send(new GetInsurancesQuery());
 		_insurances = response.Items.ToList();

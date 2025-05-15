@@ -37,7 +37,7 @@ internal class GetPackagesQueryHandler : IQueryHandler<GetPackagesQuery, QueryRe
 
     public ValueTask<QueryResult<Package>> Handle(GetPackagesQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Packages.All().GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.Packages.All().Include(p => p.Insurances).GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }
 

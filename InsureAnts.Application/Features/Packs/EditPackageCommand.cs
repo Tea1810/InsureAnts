@@ -15,8 +15,6 @@ public class EditPackageCommand : EditCommand<Package, Package, int>
     public double Premium { get; set; }
     public AvailabilityStatus Status { get; set; }
     public int DurationInDays { get; set; }
-
-    public IEnumerable<Insurance> Insurances { get; set; } = [];
 }
 
 [UsedImplicitly]

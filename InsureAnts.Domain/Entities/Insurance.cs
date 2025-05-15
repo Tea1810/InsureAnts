@@ -20,4 +20,13 @@ public class Insurance : Entity<int>
     public List<Client>? Clients { get; set; }
 
     public override string ToString() => Name;
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Insurance other) return false;
+        return Id == other.Id;
+    }
+
+    public override int GetHashCode() => Id.GetHashCode();
+
 }
