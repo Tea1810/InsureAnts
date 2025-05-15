@@ -13,7 +13,7 @@ public class AddSupportTicketCommand : ICommand<IResponse<SupportTicket>>
     public string? Description { get; set; }
     public TicketType TicketType { get; set; }
     public DateTime? AppointmentDate { get; set; }
-    public TicketStatus Status { get; set; }
+    public TicketStatus Status { get; set; } = TicketStatus.New;
     public Client? Client { get; set; }
 }
 
