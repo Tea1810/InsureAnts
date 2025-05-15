@@ -51,6 +51,10 @@ internal class GetFeedAlertsQueryHandler : IQueryHandler<GetClientsQuery, QueryR
 
     public ValueTask<QueryResult<Client>> Handle(GetClientsQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Clients.All().GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.Clients.All()
+            .Include(c => c.Deals)
+            .Include(c => c.Insurances)
+            .Include(c => c.ClientPackages)
+            .GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }

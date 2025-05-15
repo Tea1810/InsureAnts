@@ -12,7 +12,8 @@ internal class PackageProfile : Profile
         CreateMap<AddPackageCommand, Package>();
         CreateMap<Package, AddPackageCommand>();
 
-        CreateMap<EditPackageCommand, Package>();
+        CreateMap<EditPackageCommand, Package>()
+            .ForMember(p => p.Insurances, c => c.Ignore());
         CreateMap<Package, EditPackageCommand>();
     }
 }

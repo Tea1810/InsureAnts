@@ -128,4 +128,23 @@
 		parameters.Add("Title", "Add New Client");
 		base.ConfigureAddParameters(parameters, options);
 	}
+
+	// protected async Task EditDealsAsync(Client model)
+	// {
+	// 	var parameters = model.ToModelDialogParameters();
+	// 	parameters.Add("Title", GetEditTitle(model));
+
+	// 	var dialog = await DialogService.ShowAsync<TEditComponent>(
+	// 		GetEditTitle(model),
+	// 		parameters,
+	// 		new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true }
+	// 	);
+
+	// 	var result = await dialog.Result;
+
+	// 	if (!result.Canceled)
+	// 	{
+	// 		await ReloadTableServerData();
+	// 	}
+	// }
 }
