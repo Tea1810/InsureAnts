@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudDialogProvider MaxWidth="MaxWidth.Medium" FullWidth="true" CloseOnEscapeKey="true" />
@@ -37,19 +38,14 @@
 			</div>
 		</div>
 	</MudAppBar>
+	<InsureAnts.Web.Components.Shared.AddSupportTicketComponent />
 	<MudMainContent>
 		<div class="pa-4">
 			@Body
 		</div>
 	</MudMainContent>
+
 </MudLayout>
-<MudButton OnClick=AddSupportTicket
-Icon="@Icons.Material.Filled.Chat"
-Color="Color.Primary"
-Style=" position: fixed;
-    bottom: 50px;
-    right: 50px;
-    z-index: 9999;" />
 @code
 {
 }

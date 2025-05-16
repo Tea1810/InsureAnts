@@ -42,11 +42,15 @@ internal class AddSupportTicketCommandHandler : ICommandHandler<AddSupportTicket
     public async ValueTask<IResponse<SupportTicket>> Handle(AddSupportTicketCommand command, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<SupportTicket>(command);
+        if(entity.Id == 0)
+        {
+            entity.ClientId = 1;
+        }
 
         _unitOfWork.SupportTickets.Add(entity);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Response.Success(Texts.Created<SupportTicket>($"from client {command.Client!.FirstName}")).For(entity);
+        return Response.Success(Texts.Created<SupportTicket>($"from client {entity.Id}")).For(entity);
     }
 }

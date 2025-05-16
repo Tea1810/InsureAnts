@@ -15,6 +15,12 @@
 		<MudForm @ref="Form" Model="@Command">
 			<MudStack>
 				<MudTextField @bind-Value="Command.TicketType" Label="TicketType" Required RequiredError="Name is required." />
+				<MudSelect T="TicketType" Label="TicketType" @bind-Value="Command.TicketType">
+					@foreach (var ticketType in Enum.GetValues<TicketType>())
+					{
+						<MudSelectItem Value="ticketType">@ticketType</MudSelectItem>
+					}
+				</MudSelect>
 				<MudTextField @bind-Value="Command.Description" Label="Description" Required RequiredError="Description is required." />
 				@if (Command.TicketType is TicketType.Appointment)
 				{
