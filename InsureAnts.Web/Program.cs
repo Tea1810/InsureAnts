@@ -5,6 +5,8 @@ using InsureAnts.Web;
 using InsureAnts.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("InsureAntsDbContextConnection") ?? throw new InvalidOperationException("Connection string 'InsureAntsDbContextConnection' not found.");;
@@ -15,6 +17,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<InsureAntsDbContext>();
 builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 var services = builder.Services;
 var configuration = builder.Configuration;
 

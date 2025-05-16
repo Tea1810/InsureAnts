@@ -1,10 +1,11 @@
 ﻿@page "/clientsOverview"
-
+@attribute [Authorize]
 @using InsureAnts.Application.Features.Abstractions
 @using InsureAnts.Application.Features.Clients
 @using InsureAnts.Domain.Entities
 @using InsureAnts.Web.Components.Pages.Insurances
 @using InsureAnts.Web.Components.Shared
+@using Microsoft.AspNetCore.Authorization
 
 @inherits AppEditableTableComponent<GetClientsQuery, Client, AddClientForm, EditClientForm>
 
