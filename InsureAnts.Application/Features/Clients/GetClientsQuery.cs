@@ -11,9 +11,9 @@ public class GetClientsQuery : AbstractQueryRequest<Client>
 {
     public string SearchTerm { get; set; } = string.Empty;
 
-    public AvailabilityStatus Status { get; set; }
+    public AvailabilityStatusFilter StatusFilter { get; set; } = AvailabilityStatusFilter.All;
 
-    public Gender Gender { get; set; }
+    public GenderFilter GenderFilter { get; set; } = GenderFilter.All;
 
     public override IQueryable<Client> ApplyFilter(IQueryable<Client> source)
     {
@@ -22,7 +22,19 @@ public class GetClientsQuery : AbstractQueryRequest<Client>
             source = source.Where(c => c.FirstName.Contains(SearchTerm) || c.LastName.Contains(SearchTerm));
         }
 
-        source = source.Where(c => c.Status == Status);
+        source = StatusFilter switch
+        {
+            AvailabilityStatusFilter.Active => source.Where(c => c.Status == AvailabilityStatus.Active),
+            AvailabilityStatusFilter.Inactive => source.Where(c => c.Status == AvailabilityStatus.Inactive),
+            _ => source
+        };
+
+        source = GenderFilter switch
+        {
+            GenderFilter.Male => source.Where(c => c.Gender == Gender.Male),
+            GenderFilter.Female => source.Where(c => c.Gender == Gender.Female),
+            _ => source
+        };
 
         return base.ApplyFilter(source);
     }
@@ -39,6 +51,10 @@ internal class GetFeedAlertsQueryHandler : IQueryHandler<GetClientsQuery, QueryR
 
     public ValueTask<QueryResult<Client>> Handle(GetClientsQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Clients.All().Include(c => c.Deals).GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.Clients.All()
+            .Include(c => c.Deals, asSplitQuery: true)
+            .Include(c => c.Insurances, asSplitQuery: true)
+            .Include(c => c.ClientPackages, asSplitQuery: true)
+            .GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }

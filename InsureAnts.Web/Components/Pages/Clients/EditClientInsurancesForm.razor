@@ -1,0 +1,60 @@
+﻿@using InsureAnts.Application.Features.Clients
+@using InsureAnts.Application.Features.Deals
+@using InsureAnts.Application.Features.Insurances
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Shared
+@using InsureAnts.Domain.Enums;
+
+@inherits AppDialogEditFormComponent<EditClientCommand, Client>
+
+<MudDialog>
+	<DialogContent>
+		<div Style="display: flex; align-items: center; width: 100%; margin-bottom: 20px">
+			<MudText Typo="Typo.h6">@Title</MudText>
+		</div>
+
+		<MudForm @ref="Form" Model="@Command">
+			<MudStack>
+				<MudText>Owned Insurances</MudText>
+				<MudChipSet T="Insurance">
+					@foreach (var insurance in Command.Insurances!)
+					{
+						<MudTooltip Text="@GetInsuranceToolTip(insurance)">
+							<MudChip T="Insurance" Color="Color.Primary" Variant="Variant.Outlined">
+								@insurance.Name
+							</MudChip>
+						</MudTooltip>
+					}
+				</MudChipSet>
+			</MudStack>
+			<MudSelect T="Insurance" Label="Select new insurances" @bind-SelectedValues="Command.Insurances" Multiselection>
+				@foreach (var insurance in _insurances)
+				{
+					<MudSelectItem T="Insurance" Value="insurance">@insurance.Name</MudSelectItem>
+				}
+			</MudSelect>
+		</MudForm>
+	</DialogContent>
+
+	<DialogActions>
+		<div class="d-flex justify-space-between mud-width-full">
+			<MudButton OnClick="Cancel">Cancel</MudButton>
+			<MudButton Color="Color.Primary" OnClick="Submit">Save</MudButton>
+		</div>
+	</DialogActions>
+</MudDialog>
+
+@code {
+	[Parameter]
+	public string? Title { get; set; }
+
+	private List<Insurance> _insurances = [];
+
+	private string GetInsuranceToolTip(Insurance insurance) => $"Premium: <b>{insurance.Premium} EUR</b>; Duration in days: <b>{insurance.DurationInDays}</b>; Coverage: {insurance.Coverage} EUR";
+
+	protected override async Task OnInitializedAsync()
+	{
+		var response = await Mediator.Send(new GetInsurancesQuery());
+		_insurances = response.Items.ToList();
+	}
+}

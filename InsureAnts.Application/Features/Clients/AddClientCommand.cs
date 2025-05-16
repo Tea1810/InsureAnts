@@ -10,21 +10,16 @@ namespace InsureAnts.Application.Features.Clients;
 
 public class AddClientCommand : ICommand<IResponse<Client>>
 {
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public required string Email { get; set; }
-    public required string Phone { get; set; }
-    public required string Address { get; set; }
-    public required string Password { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
+    public string Address { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
     public DateTime DateOfBirth { get; set; }
     public Gender Gender { get; set; }
     public AvailabilityStatus Status { get; set; }
-    public int NumberOfDeals { get; set; }
-
-    public List<Deal>? Deals { get; set; }
-    public List<Insurance>? Insurances { get; set; }
-    public List<ClientPackage>? ClientPackages { get; set; }
-    public List<SupportTicket>? Tickets { get; set; }
+    public int NumberOfDeals { get; set; } = 1;
 }
 
 [UsedImplicitly]
@@ -32,9 +27,11 @@ internal class AddClientCommandValidator : AbstractValidator<Client>
 {
     public AddClientCommandValidator()
     {
-        RuleFor(command => command.FirstName).MaximumLength(50);
-        RuleFor(command => command.LastName).MaximumLength(50);
-        RuleFor(command => command.Email).EmailAddress();
+        RuleFor(command => command.FirstName).MaximumLength(50).NotEmpty();
+        RuleFor(command => command.LastName).MaximumLength(50).NotEmpty();
+        RuleFor(command => command.Email).EmailAddress().MaximumLength(100).NotEmpty();
+        RuleFor(command => command.Phone).MaximumLength(15).NotEmpty();
+        RuleFor(command => command.Address).NotEmpty().MaximumLength(100);
     }
 }
 

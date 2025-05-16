@@ -12,7 +12,7 @@
 
 		<MudForm @ref="Form" Model="@Command">
 			<MudStack>
-				<MudTextField @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
+				<MudTextField MaxLength="100" @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
 			</MudStack>
 		</MudForm>
 

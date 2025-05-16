@@ -1,6 +1,175 @@
 ﻿@page "/clientsOverview"
 
-<h1>Clients</h1>
-@code {
+@using InsureAnts.Application.Features.Abstractions
+@using InsureAnts.Application.Features.Clients
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Pages.Insurances
+@using InsureAnts.Web.Components.Shared
+@using InsureAnts.Domain.Enums;
 
+@inherits AppEditableTableComponent<GetClientsQuery, Client, AddClientForm, EditClientForm>
+
+<MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
+	<ToolBarContent>
+		<div class="d-flex gap-4 w-100 justify-space-between align-end">
+			<MudText Typo="Typo.h6">Clients</MudText>
+			<MudTextField @bind-Value="QueryRequest.SearchTerm"
+						  T="string"
+						  OnKeyUp="ReloadTableOnEnter"
+						  Placeholder="Search"
+						  Clearable="true"
+						  Adornment="Adornment.Start"
+						  AdornmentIcon="@Icons.Material.Filled.Search"
+						  IconSize="Size.Medium"
+						  Class="mt-0"
+						  autocomplete="off"
+						  id="filter" />
+
+			<MudSelect T="GenderFilter" Label="Gender Filter" Value="QueryRequest.GenderFilter" ValueChanged="OnGenderFilterChanged">
+				@foreach (var status in Enum.GetValues<GenderFilter>())
+				{
+					<MudSelectItem T="GenderFilter" Value="status">@status.ToString()</MudSelectItem>
+				}
+			</MudSelect>
+
+			<MudSelect T="AvailabilityStatusFilter" Label="Status Filter" Value="QueryRequest.StatusFilter" ValueChanged="OnStatusFilterChanged">
+				@foreach (var status in Enum.GetValues<AvailabilityStatusFilter>())
+				{
+					<MudSelectItem T="AvailabilityStatusFilter" Value="status">@status.ToString()</MudSelectItem>
+				}
+			</MudSelect>
+
+			<MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
+		</div>
+	</ToolBarContent>
+	<HeaderContent>
+		<MudTh>
+			<MudTableSortLabel T="Client" SortLabel="@nameof(Client.FirstName)" InitialDirection="SortDirection.Ascending">
+				Name
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Client" SortLabel="@nameof(Client.LastName)" InitialDirection="SortDirection.Ascending">
+				Last Name
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Client" SortLabel="@nameof(Client.Phone)" InitialDirection="SortDirection.Ascending">
+				Phone
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Client" SortLabel="@nameof(Client.Gender)" InitialDirection="SortDirection.Ascending">
+				Gender
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh>
+			<MudTableSortLabel T="Client" SortLabel="@nameof(Client.Status)" InitialDirection="SortDirection.Ascending">
+				Status
+			</MudTableSortLabel>
+		</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd>
+			<MudText>@context.FirstName</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.LastName</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Phone</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Gender</MudText>
+		</MudTd>
+		<MudTd>
+			<MudText>@context.Status</MudText>
+		</MudTd>
+		<MudTd Class="d-flex justify-end">
+			<MudTooltip Text="Insurances">
+				<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Inbox" OnClick="@(()=>EditInsurancesAsync(context))" />
+			</MudTooltip>
+			<MudTooltip Text="Deals">
+				<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.AttachMoney" OnClick="@(()=>EditDealsAsync(context))" />
+			</MudTooltip>
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditItemAsync(context))" />
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
+		</MudTd>
+	</RowTemplate>
+	<NoRecordsContent>
+		<MudText>There are no items to show in this view.</MudText>
+	</NoRecordsContent>
+	<LoadingContent>
+		<MudText>Loading...</MudText>
+	</LoadingContent>
+	<PagerContent>
+		<MudTablePager />
+	</PagerContent>
+</MudTable>
+
+@code {
+	private async Task OnStatusFilterChanged(AvailabilityStatusFilter newValue)
+	{
+		QueryRequest.StatusFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	private async Task OnGenderFilterChanged(GenderFilter newValue)
+	{
+		QueryRequest.GenderFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	protected override async Task<IResponse> OnDeleteAsync(Client model)
+	{
+		var response = await Mediator.Send(new DeleteClientCommand { Id = model.Id });
+		return response;
+	}
+
+	protected override string GetEditTitle(Client model) => $"Edit Client {model.FirstName} {model.LastName}";
+
+	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
+	{
+		parameters.Add("Title", "Add New Client");
+		base.ConfigureAddParameters(parameters, options);
+	}
+
+	protected async Task EditDealsAsync(Client model)
+	{
+		var parameters = model.ToModelDialogParameters();
+		parameters.Add("Title", GetEditTitle(model));
+
+		var dialog = await DialogService.ShowAsync<EditClientDealsForm>(
+			GetEditTitle(model),
+			parameters,
+			new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true }
+		);
+
+		var result = await dialog.Result;
+
+		if (!result.Canceled)
+		{
+			await ReloadTableServerData();
+		}
+	}
+
+	protected async Task EditInsurancesAsync(Client model)
+	{
+		var parameters = model.ToModelDialogParameters();
+		parameters.Add("Title", GetEditTitle(model));
+
+		var dialog = await DialogService.ShowAsync<EditClientInsurancesForm>(
+			GetEditTitle(model),
+			parameters,
+			new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true }
+		);
+
+		var result = await dialog.Result;
+
+		if (!result.Canceled)
+		{
+			await ReloadTableServerData();
+		}
+	}
 }

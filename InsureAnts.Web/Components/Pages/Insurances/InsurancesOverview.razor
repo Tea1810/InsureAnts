@@ -1,10 +1,14 @@
 ﻿@page "/insurancesOverview"
 
 @using InsureAnts.Application.Features.Abstractions
+@using InsureAnts.Application.Features.InsuranceTypes
 @using InsureAnts.Application.Features.Insurances
 @using InsureAnts.Domain.Entities
+@using InsureAnts.Domain.Enums;
 @using InsureAnts.Web.Components.Shared
+
 @inherits AppEditableTableComponent<GetInsurancesQuery, Insurance, AddInsuranceForm,EditInsuranceForm>
+
 <MudTable @ref="Table" ServerData="TableServerData" Dense="true" Hover="true" Striped="true" AllowUnsorted="false">
 	<ToolBarContent>
 		<div class="d-flex gap-4 w-100 justify-space-between align-end">
@@ -20,6 +24,20 @@
 						  Class="mt-0"
 						  autocomplete="off"
 						  id="filter" />
+
+			<MudSelect T="string" Label="Insurance Type Filter" Value="QueryRequest.InsuranceTypeFilter" ValueChanged="OnTypeFilterChanged" Clearable>
+				@foreach (var type in _insuranceTypes)
+				{
+					<MudSelectItem T="string" Value="type.Name"> @type.Name</MudSelectItem>
+				}
+			</MudSelect>
+
+			<MudSelect T="AvailabilityStatusFilter" Label="Status Filter" Value="QueryRequest.StatusFilter" ValueChanged="OnStatusFilterChanged">
+				@foreach (var status in Enum.GetValues<AvailabilityStatusFilter>())
+				{
+					<MudSelectItem T="AvailabilityStatusFilter" Value="status">@status.ToString()</MudSelectItem>
+				}
+			</MudSelect>
 
 			<MudButton OnClick="AddItem" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">Add new</MudButton>
 		</div>
@@ -56,7 +74,7 @@
 			</MudTableSortLabel>
 		</MudTh>
 		<MudTh>
-				Description
+			Description
 		</MudTh>
 		<MudTh>
 			<MudTableSortLabel T="Insurance" SortLabel="@nameof(Insurance.CreatedAt)" InitialDirection="SortDirection.Ascending">
@@ -91,7 +109,7 @@
 			<MudText>@context.CreatedAt</MudText>
 		</MudTd>
 		<MudTd Class="d-flex justify-end">
-			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" />
+			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditItemAsync(context))" />
 			<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteItemAsync(context))" />
 		</MudTd>
 	</RowTemplate>
@@ -107,11 +125,33 @@
 </MudTable>
 
 @code {
+	private List<InsuranceType> _insuranceTypes = [];
+
 	protected override async Task<IResponse> OnDeleteAsync(Insurance model)
 	{
 		var response = await Mediator.Send(new DeleteInsuranceCommand { Id = model.Id });
 		return response;
 	}
+
+	private async Task OnTypeFilterChanged(string newValue)
+	{
+		QueryRequest.InsuranceTypeFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	private async Task OnStatusFilterChanged(AvailabilityStatusFilter newValue)
+	{
+		QueryRequest.StatusFilter = newValue;
+		await ReloadTableServerData();
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var response = await Mediator.Send(new GetInsuranceTypesQuery());
+		_insuranceTypes = response.Items.ToList();
+	}
+
+	protected override string GetEditTitle(Insurance model) => $"Edit Insurance {model.Name}";
 
 	protected override void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
 	{

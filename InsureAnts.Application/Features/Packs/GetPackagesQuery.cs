@@ -10,17 +10,31 @@ namespace InsureAnts.Application.Features.Packages;
 public class GetPackagesQuery : AbstractQueryRequest<Package>
 {
     public string SearchTerm { get; set; } = string.Empty;
+
     public string Name { get; set; } = string.Empty;
-    public AvailabilityStatus Status { get; set; }
+
+    public AvailabilityStatusFilter StatusFilter { get; set; } = AvailabilityStatusFilter.All;
+
+    public string InsuranceFilter { get; set; } = string.Empty;
 
     public override IQueryable<Package> ApplyFilter(IQueryable<Package> source)
     {
         if (!string.IsNullOrEmpty(SearchTerm))
         {
-            source = source.Where(c => c.Name.Contains(SearchTerm));
+            source = source.Where(p => p.Name.Contains(SearchTerm));
         }
 
-        source = source.Where(c => c.Status == Status);
+        if (!string.IsNullOrEmpty(InsuranceFilter))
+        {
+            source = source.Where(p => p.Insurances!.Select(i => i.Name).ToList().Contains(InsuranceFilter));
+        }
+
+        source = StatusFilter switch
+        {
+            AvailabilityStatusFilter.Active => source.Where(p => p.Status == AvailabilityStatus.Active),
+            AvailabilityStatusFilter.Inactive => source.Where(p => p.Status == AvailabilityStatus.Inactive),
+            _ => source
+        };
 
         return base.ApplyFilter(source);
     }
@@ -37,7 +51,7 @@ internal class GetPackagesQueryHandler : IQueryHandler<GetPackagesQuery, QueryRe
 
     public ValueTask<QueryResult<Package>> Handle(GetPackagesQuery query, CancellationToken cancellationToken)
     {
-        return _unitOfWork.Packages.All().GetResultAsync(query, cancellationToken).ToValueTask();
+        return _unitOfWork.Packages.All().Include(p => p.Insurances).GetResultAsync(query, cancellationToken).ToValueTask();
     }
 }
 

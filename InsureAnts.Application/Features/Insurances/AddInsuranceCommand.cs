@@ -26,8 +26,8 @@ internal class AddInsuranceCommandValidator : AbstractValidator<Insurance>
 {
     public AddInsuranceCommandValidator()
     {
-        RuleFor(command => command.Name).MaximumLength(50);
-        RuleFor(command => command.Description).MaximumLength(200);
+        RuleFor(command => command.Name).MaximumLength(100);
+        RuleFor(command => command.Description).MaximumLength(500);
     }
 }
 

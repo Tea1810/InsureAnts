@@ -12,17 +12,17 @@
 
 		<MudForm @ref="Form" Model="@Command">
 			<MudStack>
-				<MudTextField @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
-				<MudTextField @bind-Value="Command.Description" Label="Description" Required RequiredError="Description is required." />
+				<MudTextField MaxLength="100" @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
+				<MudTextField MaxLength="500" @bind-Value="Command.Description" Label="Description" Required RequiredError="Description is required." />
 				<MudSelect T="InsuranceType" Label="Insurance Type" @bind-Value="Command.InsuranceType">
 					@foreach (var insuranceType in _insuranceTypes)
 					{
 						<MudSelectItem T="InsuranceType" Value="insuranceType">@insuranceType.Name</MudSelectItem>
 					}
 				</MudSelect>
-				<MudTextField @bind-Value="Command.Premium" InputMode="InputMode.numeric" Label="Premium" Required RequiredError="Premium is required." />
-				<MudTextField @bind-Value="Command.Coverage" InputMode="InputMode.numeric" Label="Coverage" Required RequiredError="Coverage is required." />
-				<MudTextField @bind-Value="Command.DurationInDays" InputMode="InputMode.numeric" Label="Duration (days)" Required RequiredError="Duration is required." />
+				<MudNumericField HideSpinButtons Min="1" @bind-Value="Command.Premium" InputMode="InputMode.numeric" Label="Premium" Required RequiredError="Premium is required." />
+				<MudNumericField HideSpinButtons Min="1" @bind-Value="Command.Coverage" InputMode="InputMode.numeric" Label="Coverage" Required RequiredError="Coverage is required." />
+				<MudNumericField HideSpinButtons Min="1" @bind-Value="Command.DurationInDays" InputMode="InputMode.numeric" Label="Duration (days)" Required RequiredError="Duration is required." />
 			</MudStack>
 		</MudForm>
 

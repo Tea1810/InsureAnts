@@ -11,10 +11,10 @@
 
 		<MudForm @ref="Form" Model="@Command">
 			<MudStack>
-				<MudTextField @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
-				<MudTextField @bind-Value="Command.Description" Label="Description" Required RequiredError="Discount is required." />
-				<MudTextField @bind-Value="Command.DiscountPercentage" Label="Discount" Required RequiredError="Discount is required." />
-				<MudTextField @bind-Value="Command.DurationInDays" InputMode="InputMode.numeric" Label="Duration (days)" Required RequiredError="Duration is required." />
+				<MudTextField MaxLength="100" @bind-Value="Command.Name" Label="Name" Required RequiredError="Name is required." />
+				<MudTextField MaxLength="500" @bind-Value="Command.Description" Label="Description" Required RequiredError="Discount is required." />
+				<MudNumericField HideSpinButtons Min="1" @bind-Value="Command.DiscountPercentage" Label="Discount" Required RequiredError="Discount is required." />
+				<MudNumericField HideSpinButtons Min="1" @bind-Value="Command.DurationInDays" InputMode="InputMode.numeric" Label="Duration (days)" Required RequiredError="Duration is required." />
 			</MudStack>
 		</MudForm>
 
