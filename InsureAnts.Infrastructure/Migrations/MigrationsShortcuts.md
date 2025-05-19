@@ -9,7 +9,7 @@ Make sure to have the EF Core CLI tools installed using the following command:
 To add a new migrations run one of the following commands depending on the context:
 
 AzureSqlServer: 
-`dotnet ef migrations add CommitName --project .\InsureAnts\InsureAnts.Infrastructure --startup-project .\InsureAnts\InsureAnts.Web -o Migrations/SqlServerMigrations -c InsureAntsDbContext`
+`dotnet ef migrations add CommitName --project .\InsureAnts.Infrastructure --startup-project .\InsureAnts.Web -o Migrations/SqlServerMigrations -c InsureAntsDbContext`
 
 # Apply all migrations
 

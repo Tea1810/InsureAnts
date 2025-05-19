@@ -12,6 +12,8 @@ public class GetSupportTicketsQuery : AbstractQueryRequest<SupportTicket>
     public string SearchTerm { get; set; } = string.Empty;
     public TicketType TicketType { get; set; }
     public TicketStatus Status { get; set; }
+    public string? Description { get; set; }
+    public DateTime? AppointmentDate { get; set; }
 
     public override IQueryable<SupportTicket> ApplyFilter(IQueryable<SupportTicket> source)
     {

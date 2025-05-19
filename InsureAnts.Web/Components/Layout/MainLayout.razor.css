@@ -33,3 +33,9 @@
     padding-right: 8px;
     padding-top: 6px;
 }
+::deep .chat-button {
+    position: fixed;
+    bottom: 600px;
+    right: 50px;
+    z-index: 9999;
+}

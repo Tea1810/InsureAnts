@@ -52,9 +52,9 @@ internal class EditInsuranceCommandHandler : ICommandHandler<EditInsuranceComman
 
     public async ValueTask<IResponse<Insurance>> Handle(EditInsuranceCommand command, CancellationToken cancellationToken)
     {
-        var client = command.Entity!;
+        var insurance = command.Entity!;
 
-        var entity = _mapper.Map(command, client);
+        var entity = _mapper.Map(command, insurance);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -55,6 +55,6 @@
 	protected override async Task OnInitializedAsync()
 	{
 		var response = await Mediator.Send(new GetInsurancesQuery());
-		_insurances = response.Items.ToList();
+		_insurances = response.Items.Where(i => i.Status is AvailabilityStatus.Active).ToList();
 	}
 }
