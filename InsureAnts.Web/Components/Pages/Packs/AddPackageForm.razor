@@ -43,6 +43,6 @@
 	protected override async Task OnParametersSetAsync()
 	{
 		var response = await Mediator.Send(new GetInsurancesQuery());
-		_insurances = response.Items.ToList();
+		_insurances = response.Items.Where(i => i.Status == Domain.Enums.AvailabilityStatus.Inactive).ToList();
 	}
 }
