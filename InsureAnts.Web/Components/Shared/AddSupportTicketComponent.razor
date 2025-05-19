@@ -1,0 +1,38 @@
+﻿@using InsureAnts.Application.Features.SupportTickets
+@using InsureAnts.Domain.Entities
+@using InsureAnts.Web.Components.Pages.SupportTickets
+@using InsureAnts.Web.Components.Shared
+@inject IDialogService DialogService
+<MudFab OnClick=OpenAddSupportTicketDialog
+           Icon="@Icons.Material.Filled.Chat"
+           Color="Color.Primary"
+           Style=" position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 9999;" />
+@code {
+
+    protected virtual string GetAddTitle() => "Add new";
+
+    protected virtual void ConfigureAddParameters(DialogParameters parameters, DialogOptions options)
+    {
+    }
+    private async Task OpenAddSupportTicketDialog()
+    {
+        var parameters = new DialogParameters();
+
+        var options = new DialogOptions { CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true };
+
+        ConfigureAddParameters(parameters, options);
+
+        var dialog = await DialogService.ShowAsync<AddSupportTicketsForm>(
+            GetAddTitle(),
+            parameters,
+            options
+        );
+
+        var result = ProcessAddDialogResult(await dialog.Result);
+    }
+    protected virtual DialogResult ProcessAddDialogResult(DialogResult dialogResult) => dialogResult;
+}
+}
