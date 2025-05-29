@@ -6,8 +6,8 @@ namespace InsureAnts.Domain.Entities;
 [EntityName("Package")]
 public class Package : Entity<int>
 {
-    public required string Name { get; set; }
-    public required string Description { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public double Premium { get; set; }
     public AvailabilityStatus Status { get; set; }
     public int DurationInDays { get; set; }
