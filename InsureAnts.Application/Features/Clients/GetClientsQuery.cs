@@ -40,11 +40,11 @@ public class GetClientsQuery : AbstractQueryRequest<Client>
     }
 }
 
-internal class GetFeedAlertsQueryHandler : IQueryHandler<GetClientsQuery, QueryResult<Client>>
+internal class GetClientsQueryHandler : IQueryHandler<GetClientsQuery, QueryResult<Client>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetFeedAlertsQueryHandler(IUnitOfWork unitOfWork)
+    public GetClientsQueryHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
